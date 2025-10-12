@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fish Farm Analysis</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #e8f9ff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1, h2 {
+      color: #005f73;
+    }
+
+    form {
+      display: inline-block;
+      text-align: left;
+      background: #ffffffcc;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #008cba;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00b4d8;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ffffffcc;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to the chat page! </h1>
+  <p>You made it to the second page 🎉</p>
+
+  <form id="farmForm">
+    <div class="form-group">
+      <label for="phValue">pH:</label>
+      <input type="number" step="0.1" id="phValue" required>
+    </div>
+
+    <div class="form-group">
+      <label for="contaminants">Contaminants:</label>
+      <input type="number" step="0.1" id="contaminants" required>
+    </div>
+
+    <div class="form-group">
+      <label for="algae">Algae:</label>
+      <input type="number" step="0.1" id="algae" required>
+    </div>
+
+    <div class="form-group">
+      <label for="dissolvedOxygen">Dissolved Oxygen:</label>
+      <input type="number" step="0.1" id="dissolvedOxygen" required>
+    </div>
+
+    <div class="form-group">
+      <label for="waterQuality">Bacterial Load (water quality):</label>
+      <input type="number" step="0.1" id="waterQuality" required>
+    </div>
+
+    <div class="form-group">
+      <label for="environmentalCondition">Environmental Condition:</label>
+      <input type="text" id="environmentalCondition" required>
+    </div>
+
+    <button type="submit">Analyze</button>
+  </form>
+
+  <h2>AI Analysis:</h2>
+  <div id="result"></div>
+
+  <script>
+    const farmForm = document.getElementById("farmForm");
+
+    farmForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        phValue: parseFloat(document.getElementById("phValue").value),
+        contaminants: parseFloat(document.getElementById("contaminants").value),
+        algae: parseFloat(document.getElementById("algae").value),
+        dissolvedOxygen: parseFloat(document.getElementById("dissolvedOxygen").value),
+        waterQuality: parseFloat(document.getElementById("waterQuality").value),
+        environmentalCondition: document.getElementById("environmentalCondition").value
+      };
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/callOpenAI", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+        document.getElementById("result").innerText = json.response || json.error || "No response";
+      } catch (err) {
+        document.getElementById("result").innerText = "Error: " + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>

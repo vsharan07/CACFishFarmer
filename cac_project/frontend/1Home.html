@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FishFarmer.AI</title>
+  <style>
+    body {
+      background-color: #e8f9ff;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 40px 0 80px 0; /* moved everything up */
+      text-align: center;
+    }
+
+    h1 {
+      color: #005f73;
+      font-size: 3em; /* bigger title */
+      margin-bottom: 40px;
+    }
+
+    /* Container for fish + chat bubble */
+    .container {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 40px;
+      margin-left: -10%;
+      flex-wrap: nowrap;
+    }
+
+    /* Chat bubble */
+    .chat-bubble {
+      background-image: url('https://www.freeiconspng.com/uploads/speech-bubble-png-27.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 180px;       /* bigger bubble */
+      height: 80px;
+      display: flex;
+      align-items: flex-start;  
+      justify-content: center;
+      padding-top: 30px;        
+      font-size: 16px;     /* bigger text */
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      color: #005f73;
+      font-weight: 700; 
+    }
+
+    /* Fish image */
+    .container img {
+      width: 250px; /* larger fish */
+      height: auto;
+      display: block;
+    }
+
+    /* Buttons */
+    button {
+      display: block;
+      width: 320px;          /* wider buttons */
+      margin: 15px auto;     /* more spacing between buttons */
+      background-color: #008cba;
+      color: white;
+      border: none;
+      padding: 16px 28px;    /* taller buttons */
+      border-radius: 8px;
+      font-size: 20px;       /* larger text */
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-family: 'Arial Black', Arial, sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00b4d8;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      background-color: #0077b6;
+      transform: scale(0.97);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        margin-left: 0;
+      }
+
+      .chat-bubble {
+        margin-bottom: 15px;
+      }
+
+      .container img {
+        width: 70%;
+      }
+
+      button {
+        width: 80%;
+        padding: 14px 20px;
+        font-size: 18px;
+      }
+
+      h1 {
+        font-size: 2.2em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>FishFarmer.AI</h1>
+
+  <div class="container">
+    <div class="chat-bubble">
+      glub glub glub
+    </div>
+
+    <img 
+      src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" 
+      alt="fish"
+    >
+  </div>
+
+  <button type="button" onclick="window.location.href='2Chat.html'">
+    Chat
+  </button>
+
+  <button type="button" onclick="window.location.href='3Options.html'">
+    Options
+  </button>
+
+  <button type="button" onclick="window.location.href='4Account.html'">
+    Account
+  </button>
+
+</body>
+</html>
