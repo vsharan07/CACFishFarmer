@@ -20,12 +20,12 @@ numpy 2.1.3 \
 idk other things  \ 
 
 
-## 👥 Team + Credit
+## Team + Credit
 Andrew Wang \ 
 Alicia Ramirez  \ 
 Vedant Sharan  \ 
 Ava Sinclait  \ 
 
 
-## 💬 Future Directions
+## Future Directions
 1. 
