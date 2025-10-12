@@ -1,5 +1,5 @@
 # CACFishFarmer
-AI tool for Fish Farming, developed for the Congressional App Challenge, Congressional District: FL-27
+AI tool for Fish Farming, developed for the Congressional App Challenge, Congressional District: FL-27  \ 
 
 # Overview
 ##  Core Functionality
@@ -17,14 +17,14 @@ AI tool for Fish Farming, developed for the Congressional App Challenge, Congres
 
 # Dependencies
 numpy 2.1.3 \
-idk other things
+idk other things  \ 
 
 
 ## 👥 Team + Credit
-Andrew Wang
-Alicia Ramirez
-Vedant Sharan
-Ava Sinclait
+Andrew Wang \ 
+Alicia Ramirez  \ 
+Vedant Sharan  \ 
+Ava Sinclait  \ 
 
 
 ## 💬 Future Directions
