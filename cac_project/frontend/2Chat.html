@@ -7,46 +7,73 @@
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       background-color: #e8f9ff;
-      text-align: center;
-      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    h1, h2 {
-      color: #005f73;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
     }
 
     form {
-      display: inline-block;
-      text-align: left;
       background: #ffffffcc;
-      padding: 20px 30px;
+      padding: 25px 35px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 350px;
     }
 
-    .form-group {
-      margin-bottom: 15px;
+    h1 {
+      text-align: center;
+      color: #005f73;
+      margin-bottom: 5px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     label {
-      display: block;
-      margin-bottom: 5px;
+      flex: 1.3;
       font-weight: bold;
+      color: #005f73;
+      font-size: 15px;
     }
 
-    input {
-      width: 100%;
-      padding: 8px;
+    input[type="number"],
+    textarea {
+      flex: 1.7;
+      padding: 6px 8px;
       border-radius: 6px;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    textarea {
+      height: 70px;
+      width: 100%;
+      resize: none;
     }
 
     button {
+      margin-top: 10px;
       background-color: #008cba;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 15px;
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
@@ -57,57 +84,67 @@
       background-color: #00b4d8;
     }
 
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #ffffffcc;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      min-height: 50px;
+    .back-button {
+      background-color: #555;
+      color: white;
+      padding: 10px 0;       /* height stays same, padding-left/right removed */
+      width: 120px;          /* same width as the form */
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #333;
     }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to the chat page! </h1>
-  <p>You made it to the second page 🎉</p>
+  <div class="container">
+    <form id="farmForm">
+      <h1>Fish Farm Data</h1>
 
-  <form id="farmForm">
-    <div class="form-group">
-      <label for="phValue">pH:</label>
-      <input type="number" step="0.1" id="phValue" required>
-    </div>
+      <div class="form-row">
+        <label for="algae">Algae:</label>
+        <input type="number" step="0.1" id="algae" required>
+      </div>
 
-    <div class="form-group">
-      <label for="contaminants">Contaminants:</label>
-      <input type="number" step="0.1" id="contaminants" required>
-    </div>
+      <div class="form-row">
+        <label for="phValue">pH Value:</label>
+        <input type="number" step="0.1" id="phValue" required>
+      </div>
 
-    <div class="form-group">
-      <label for="algae">Algae:</label>
-      <input type="number" step="0.1" id="algae" required>
-    </div>
+      <div class="form-row">
+        <label for="contaminants">Contaminants:</label>
+        <input type="number" step="0.1" id="contaminants" required>
+      </div>
 
-    <div class="form-group">
-      <label for="dissolvedOxygen">Dissolved Oxygen:</label>
-      <input type="number" step="0.1" id="dissolvedOxygen" required>
-    </div>
+      <div class="form-row">
+        <label for="dissolvedOxygen">Dissolved Oxygen:</label>
+        <input type="number" step="0.1" id="dissolvedOxygen" required>
+      </div>
 
-    <div class="form-group">
-      <label for="waterQuality">Bacterial Load (water quality):</label>
-      <input type="number" step="0.1" id="waterQuality" required>
-    </div>
+      <div class="form-row">
+        <label for="waterQuality">Water Quality:</label>
+        <input type="number" step="0.1" id="waterQuality" required>
+      </div>
 
-    <div class="form-group">
-      <label for="environmentalCondition">Environmental Condition:</label>
-      <input type="text" id="environmentalCondition" required>
-    </div>
+      <div class="form-row" style="flex-direction: column; align-items: flex-start;">
+        <label for="environmentalCondition">Environmental Conditions:</label>
+        <textarea id="environmentalCondition" required></textarea>
+      </div>
 
-    <button type="submit">Analyze</button>
-  </form>
+      <button type="submit">Analyze</button>
+    </form>
 
-  <h2>AI Analysis:</h2>
-  <div id="result"></div>
+    <button class="back-button" type="button" onclick="location.href='1Home.html'">
+      Back
+    </button>
+  </div>
 
   <script>
     const farmForm = document.getElementById("farmForm");
@@ -116,9 +153,9 @@
       e.preventDefault();
 
       const data = {
+        algae: parseFloat(document.getElementById("algae").value),
         phValue: parseFloat(document.getElementById("phValue").value),
         contaminants: parseFloat(document.getElementById("contaminants").value),
-        algae: parseFloat(document.getElementById("algae").value),
         dissolvedOxygen: parseFloat(document.getElementById("dissolvedOxygen").value),
         waterQuality: parseFloat(document.getElementById("waterQuality").value),
         environmentalCondition: document.getElementById("environmentalCondition").value
@@ -132,12 +169,13 @@
         });
 
         const json = await res.json();
-        document.getElementById("result").innerText = json.response || json.error || "No response";
+        alert(json.response || json.error || "No response");
       } catch (err) {
-        document.getElementById("result").innerText = "Error: " + err.message;
+        alert("Error: " + err.message);
       }
     });
   </script>
 
 </body>
 </html>
+
