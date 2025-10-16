@@ -45,45 +45,41 @@
       font-weight: 700; 
     }
 
-    
     .container img {
       width: 250px; 
       height: auto;
       display: block;
     }
 
+    
     button {
       display: block;
-      width: 320px;          
+      width: 350px;     
       margin: 15px auto;   
       background-color: #008cba;
       color: white;
       border: none;
-      padding: 16px 28px;    
+      padding: 14px 0;    
       border-radius: 8px;
-      font-size: 20px;      
+      font-size: 16px;      
       font-weight: 700;
       letter-spacing: 1px;
-      font-family: 'Arial Black', Arial, sans-serif;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
     button:hover {
       background-color: #00b4d8;
-      transform: scale(1.05);
     }
 
     button:active {
       background-color: #0077b6;
-      transform: scale(0.97);
     }
 
     @media (max-width: 600px) {
       .container {
         flex-direction: column;
         align-items: center;
-        margin-left: 0;
       }
 
       .chat-bubble {
@@ -96,8 +92,8 @@
 
       button {
         width: 80%;
-        padding: 14px 20px;
-        font-size: 18px;
+        padding: 14px 0;
+        font-size: 16px;
       }
 
       h1 {
@@ -126,6 +122,10 @@
     Chat
   </button>
 
+  <button type="button" onclick="window.location.href='5Saves.html'">
+    Saved Farms
+  </button>
+
   <button type="button" onclick="window.location.href='3Options.html'">
     Options
   </button>
@@ -136,4 +136,6 @@
 
 </body>
 </html>
+
+
 
