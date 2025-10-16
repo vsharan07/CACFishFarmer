@@ -1,7 +1,227 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Welcome to Page 3!</h1>
-    <p>You made it to the third page 🎉</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FishFarmer.AI - Options</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #e8f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 60px 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 25px;
+    }
+
+    .options-container {
+      background: #ffffffcc;
+      padding: 45px 50px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      width: 450px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #005f73;
+      margin: 5px 0 15px 0; 
+      font-size: 2.6em;
+    }
+
+    .option-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2em;
+    }
+
+    label {
+      font-weight: bold;
+      color: #005f73;
+      font-size: 18px;
+    }
+
+    select, input[type="range"] {
+      flex: 1;
+      margin-left: 20px;
+      height: 28px;
+      font-size: 16px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 65px;
+      height: 34px;
+      margin-left: 20px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 28px;
+      width: 28px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #008cba;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(31px);
+    }
+
+    .save-button {
+      margin-top: 15px;
+      background-color: #008cba;
+      color: white;
+      border: none;
+      padding: 18px 0;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .save-button:hover {
+      background-color: #00b4d8;
+    }
+
+    .back-button {
+      background-color: #555;
+      color: white;
+      padding: 12px 0;  
+      width: 140px;        
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      align-self: flex-start;
+    }
+
+    .back-button:hover {
+      background-color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .options-container {
+        width: 90%;
+        padding: 35px 25px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .back-button, .save-button {
+        width: 80%;
+        font-size: 16px;
+        padding: 14px 0;
+      }
+
+      label {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="options-container">
+      <h1>Options</h1>
+
+      <div class="option-row">
+        <label for="sfxToggle">SFX</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="sfxToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="option-row">
+        <label for="volumeSlider">Volume</label>
+        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+      </div>
+
+      <div class="option-row">
+        <label for="rationaleToggle">Include Rationale</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="rationaleToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="option-row">
+        <label for="geoRegion">Geographic Region</label>
+        <select id="geoRegion">
+          <option value="north-america">North America</option>
+          <option value="south-america">South America</option>
+          <option value="europe">Europe</option>
+          <option value="asia">Asia</option>
+          <option value="africa">Africa</option>
+          <option value="australia">Australia</option>
+        </select>
+      </div>
+
+      <button class="save-button" type="button" onclick="saveOptions()">Save my preferences</button>
+    </div>
+
+    <button class="back-button" type="button" onclick="location.href='1Home.html'">
+      Back
+    </button>
+  </div>
+
+  <script>
+    function saveOptions() {
+      const options = {
+        sfx: document.getElementById("sfxToggle").checked,
+        volume: document.getElementById("volumeSlider").value,
+        includeRationale: document.getElementById("rationaleToggle").checked,
+        region: document.getElementById("geoRegion").value
+      };
+      console.log("Options saved:", options);
+      alert("Preferences saved!");
+    }
+  </script>
+
+</body>
 </html>
