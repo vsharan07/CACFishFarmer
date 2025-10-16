@@ -36,7 +36,7 @@
     h1 {
       text-align: center;
       color: #005f73;
-      margin: 5px 0 15px 0; 
+      margin: 5px 0 15px 0;
       font-size: 2.6em;
     }
 
@@ -45,6 +45,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 1.2em;
+      position: relative;
     }
 
     label {
@@ -179,7 +180,23 @@
 
       <div class="option-row">
         <label for="volumeSlider">Volume</label>
-        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+        <div style="flex:1; display:flex; align-items:center; margin-left:20px; position:relative;">
+          <input type="range" id="volumeSlider" min="0" max="100" value="50" style="flex:1;">
+          <span id="volumeTooltip" 
+                style="
+                  position:absolute;
+                  top:-30px;
+                  left:50%;
+                  transform:translateX(-50%);
+                  background-color:#008cba;
+                  color:white;
+                  padding:3px 6px;
+                  border-radius:4px;
+                  font-size:14px;
+                  display:none;
+                  white-space:nowrap;
+                ">50%</span>
+        </div>
       </div>
 
       <div class="option-row">
@@ -211,6 +228,25 @@
   </div>
 
   <script>
+    
+    const slider = document.getElementById("volumeSlider");
+    const tooltip = document.getElementById("volumeTooltip");
+
+    slider.addEventListener("mouseenter", () => {
+      tooltip.style.display = "inline-block";
+      tooltip.textContent = slider.value + "%";
+    });
+
+    slider.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+    });
+
+    slider.addEventListener("input", () => {
+      tooltip.textContent = slider.value + "%";
+      const percent = slider.value / slider.max;
+      tooltip.style.left = `calc(${percent * 100}% )`;
+    });
+
     function saveOptions() {
       const options = {
         sfx: document.getElementById("sfxToggle").checked,
