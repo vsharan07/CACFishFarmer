@@ -3,65 +3,65 @@
 <head>
   <title>FishFarmer.AI</title>
   <style>
-    body {
-      background-color: #e8f9ff;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      margin: 0;
-      padding: 40px 0 80px 0; 
-      text-align: center;
-    }
+      body {
+    background-color: #e8f9ff;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 0px 0 80px 0; 
+    text-align: center;
+  }
+
 
     h1 {
       color: #005f73;
-      font-size: 3em; 
+      font-size: 3.5em; 
       margin-bottom: 40px;
     }
 
-    .container {
-      display: flex;
-      align-items: flex-start;
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 40px;
-      margin-left: -10%;
-      flex-wrap: nowrap;
-    }
-
-    .chat-bubble {
-      background-image: url('https://www.freeiconspng.com/uploads/speech-bubble-png-27.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      width:  170px;      
-      height: 75px;
-      display: flex;
-      align-items: flex-start;  
-      justify-content: center;
-      padding-top: 29px;        
-      font-size: 16px;     
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
-      color: #005f73;
-      font-weight: 700; 
-    }
+    .container 
+    { display: flex; 
+      align-items: flex-start; 
+      gap: 15px; justify-content: center; 
+      margin-bottom: 40px; 
+      margin-left: -10%; 
+      flex-wrap: nowrap; 
+    } 
+    
+    .chat-bubble 
+    { background-image: url('https://www.freeiconspng.com/uploads/speech-bubble-png-27.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    width: 170px; 
+    height: 75px; 
+    display: flex; 
+    align-items: 
+    flex-start; 
+    justify-content: center; 
+    padding-top: 29px; 
+    font-size: 16px; 
+    text-align: center; 
+    font-family: 'Poppins', sans-serif; 
+    color: #005f73; 
+    font-weight: 700; 
+  }
 
     .container img {
-      width: 250px; 
+      width: 300px; 
       height: auto;
       display: block;
     }
 
-    
     button {
       display: block;
-      width: 350px;     
-      margin: 15px auto;   
+      width: 380px;     
+      margin: 18px auto;   
       background-color: #008cba;
       color: white;
       border: none;
-      padding: 14px 0;    
-      border-radius: 8px;
-      font-size: 16px;      
+      padding: 16px 0;    
+      border-radius: 10px;
+      font-size: 18px;      
       font-weight: 700;
       letter-spacing: 1px;
       cursor: pointer;
@@ -70,20 +70,24 @@
 
     button:hover {
       background-color: #00b4d8;
+      transform: scale(1.03);
     }
 
     button:active {
       background-color: #0077b6;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
       .container {
         flex-direction: column;
         align-items: center;
+        gap: 20px;
       }
 
       .chat-bubble {
-        margin-bottom: 15px;
+        width: 70%;
+        height: auto;
+        font-size: 18px;
       }
 
       .container img {
@@ -97,7 +101,7 @@
       }
 
       h1 {
-        font-size: 2.2em;
+        font-size: 2.8em;
       }
     }
   </style>
@@ -108,7 +112,7 @@
   <h1>FishFarmer.AI</h1>
 
   <div class="container">
-    <div class="chat-bubble">
+    <div class="chat-bubble" id="fish-speech">
       glub glub glub
     </div>
 
@@ -134,8 +138,57 @@
     Account
   </button>
 
-</body>
-</html>
+  <script>
+const phrases = [
+  "I byte fish",
+  "Buffering...",
+  "Swim.exe",
+  "404 pond",
+  "SeaProtocol",
+  "DataPlankton",
+  "Kernel Splash",
+  "StreamOverflow",
+  "glub glub glub",
+  "System splash",
+  "Beep…blub!",
+  "404 Fish Not",
+  "I byte water",
+  "Fin-tastic!",
+  "Too many scales",
+  "Routing Wetware..",
+  "Fishy.exe",
+  "Bloop.bloop",
+  "Ctrl+Alt+Swim",
+  "Error: scales"
+];
 
+const fishBubble = document.getElementById("fish-speech");
 
+let currentPhrase = "";
+let typingIndex = 0;
+let phraseIndex = 0;
+
+function typePhrase(phrase, callback) {
+  typingIndex = 0;
+  currentPhrase = "";
+  fishBubble.textContent = "";
+
+  const typer = setInterval(() => {
+    currentPhrase += phrase[typingIndex];
+    fishBubble.textContent = currentPhrase;
+    typingIndex++;
+    if (typingIndex === phrase.length) {
+      clearInterval(typer);
+      setTimeout(callback, 3000); 
+    }
+  }, 100); 
+}
+
+function nextPhrase() {
+  phraseIndex = Math.floor(Math.random() * phrases.length);
+  typePhrase(phrases[phraseIndex], nextPhrase);
+}
+
+nextPhrase();
+</script>
 
