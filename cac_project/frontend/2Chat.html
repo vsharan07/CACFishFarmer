@@ -114,8 +114,8 @@
       </div>
 
       <div class="form-row">
-        <label for="phValue">pH Value:</label>
-        <input type="number" step="0.1" id="phValue" required>
+        <label for="phValue">pH Value (0 to 14):</label>
+        <input type="number" step="0.1" id="phValue" min="0" max="14" required>
       </div>
 
       <div class="form-row">
@@ -124,8 +124,8 @@
       </div>
 
       <div class="form-row">
-        <label for="dissolvedOxygen">Dissolved Oxygen:</label>
-        <input type="number" step="0.1" id="dissolvedOxygen" required>
+        <label for="salinity">Salinity (ppt):</label>
+        <input type="number" step="0.1" id="salinity" min = "0" required>
       </div>
 
       <div class="form-row">
@@ -156,7 +156,7 @@
         algae: parseFloat(document.getElementById("algae").value),
         phValue: parseFloat(document.getElementById("phValue").value),
         contaminants: parseFloat(document.getElementById("contaminants").value),
-        dissolvedOxygen: parseFloat(document.getElementById("dissolvedOxygen").value),
+        salinity: parseFloat(document.getElementById("salinity").value),
         waterQuality: parseFloat(document.getElementById("waterQuality").value),
         environmentalCondition: document.getElementById("environmentalCondition").value
       };
