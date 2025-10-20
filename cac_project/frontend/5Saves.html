@@ -1,310 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Saved Farms</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #e8f9ff;
-      margin: 0;
-      padding: 30px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<meta charset="UTF-8">
+<title>Saved Farms</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #e8f9ff;
+  margin: 0;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    h1 {
-      color: #005f73;
-      margin-bottom: 25px;
-      font-size: 3.5em; 
-      letter-spacing: 1px;
-      font-weight: bold;
-    }
+h1 {
+  color: #005f73;
+  margin-bottom: 25px;
+  font-size: 3.5em; 
+  letter-spacing: 1px;
+  font-weight: bold;
+}
 
-    .farm-card {
-      background-color: #ffffffcc;
-      width: 420px;
-      height: 160px;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 18px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
+.farm-card {
+  background-color: #ffffffcc;
+  width: 420px;
+  height: 160px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
-    .farm-name {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      font-size: 2.6em;
-      font-weight: bold;
-      color: #005f73;
-      letter-spacing: 1px;
-      position: absolute;
-      top: 35px;
-      left: 55px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+.farm-name {
+  font-size: 2.6em;
+  font-weight: bold;
+  color: #005f73;
+  position: absolute;
+  top: 35px;
+  left: 55px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    .rename-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      height: 27px;
-      position: relative;
-      transition: transform 0.3s ease;
-    }
+.rename-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; height: 27px; position: relative; transition: transform 0.3s ease; }
+.rename-btn img { width: 20px; height: 27px; object-fit: contain; position: relative; top: -3px; }
 
-    .rename-btn img {
-      width: 20px;  
-      height: 27px; 
-      object-fit: contain;
-      position: relative;
-      top: -3px;
-    }
+.buttons { display: flex; gap: 12px; position: absolute; bottom: 10px; right: 15px; }
 
-    .rename-btn::after {
-      content: 'Rename';
-      position: absolute;
-      top: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
+.btn { padding: 10px 16px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Segoe UI', Tahoma, sans-serif; }
+.btn:hover, .rename-btn:hover { transform: scale(1.1); transform-origin: center; }
 
-    .rename-btn:hover::after {
-      opacity: 1;
-    }
+.btn.view { background-color: #008cba; color: white; }
+.btn.view:hover { background-color: #00b4d8; }
 
-    .buttons {
-      display: flex;
-      gap: 12px;
-      position: absolute;
-      bottom: 10px;
-      right: 15px;
-    }
+.btn.trash { background-color: #d62828; color: white; font-weight: bold; width: 50px; overflow: hidden; }
+.btn.trash::before { content: attr(data-text); display: inline-block; transition: all 0.3s ease; transform: translateX(-2px); }
+.btn.trash:hover { width: 100px; }
+.btn.trash:hover::before { content: "Delete"; }
 
-    .btn {
-      padding: 10px 16px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      position: relative;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-    }
+.action-buttons { width: 420px; display: flex; justify-content: space-between; margin-top: 20px; }
+.add-btn, .back-button { flex: 1; padding: 14px 0; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.3s ease; }
+.back-button { background-color: #555; color: white; margin-right: 15px; }
+.back-button:hover { background-color: #333; }
+.add-btn { background-color: #008cba; color: white; margin-left: 15px; }
+.add-btn:hover { background-color: #00b4d8; }
 
-    /* Hover scale effect for all buttons */
-    .btn:hover, .rename-btn:hover {
-      transform: scale(1.1);
-      transform-origin: center;
-    }
+.no-farms { font-size: 2em; font-weight: bold; color: #005f73; margin-top: 50px; text-align: center; }
 
-    .btn.view {
-      background-color: #008cba;
-      color: white;
-    }
+/* Modal overlay */
+.modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
 
-    .btn.view:hover {
-      background-color: #00b4d8;
-    }
+/* Delete Confirmation Modal */
+.confirm-modal { background:#fff; padding:25px 35px; border-radius:12px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); font-size:1.4em; color:#333; }
+.confirm-modal button { margin:15px 10px 0 10px; padding:10px 20px; font-size:1em; border-radius:8px; border:none; cursor:pointer; transition:0.2s ease; }
+.confirm-modal .confirm-btn { background-color:#d62828; color:white; }
+.confirm-modal .cancel-btn { background-color:#555; color:white; }
+.confirm-modal button:hover { opacity:0.85; }
 
-    /* Trash button morphs from emoji → Delete */
-    .btn.trash {
-      background-color: #d62828;
-      color: white;
-      font-weight: bold;
-      width: 50px; 
-      overflow: hidden;
-    }
+/* View Modal */
+.view-modal { width:380px; max-width:90%; background:linear-gradient(135deg,#f0f8ff,#e0f7fa); padding:20px 25px 40px 25px; border-radius:20px; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.25); transform:scale(0.8); opacity:0; transition:all 0.25s ease-out; font-family:'Segoe UI',Tahoma,sans-serif; }
+.modal-overlay.show .view-modal { transform:scale(1); opacity:1; }
 
-    .btn.trash::before {
-      content: attr(data-text);
-      display: inline-block;
-      transition: all 0.3s ease;
-      transform: translateX(-2px);
-    }
+.view-modal h2 { text-align:center; margin-bottom:15px; color:#005f73; font-size:1.8em; font-weight:bold; }
 
-    .btn.trash:hover {
-      width: 100px;
-    }
+.stats-box { background-color: #ffffffcc; padding:10px 15px; border-radius:12px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.1); margin-bottom:30px; }
+.stats-box p { display:flex; justify-content:space-between; margin:6px 0; font-weight:600; color:#003049; font-size:0.95em; }
+.stats-box span { color:#0077b6; font-weight:bold; opacity:0.3; }
 
-    .btn.trash:hover::before {
-      content: "Delete";
-    }
+/* Input fields inside stats */
+.stats-box input {
+  width: 60px;
+  font-size: 0.95em;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  text-align: right;
+  border: 1px solid #0077b6;
+  border-radius: 4px;
+  padding: 2px 4px;
+  opacity:1;
+}
 
-    .action-buttons {
-      width: 420px;
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
+/* Edit/Save button */
+.edit-btn { display:block; margin-left:auto; background-color:#008cba; color:white; padding:8px 20px; border-radius:12px; border:none; cursor:pointer; font-size:1em; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:all 0.2s ease; }
+.edit-btn:hover { background-color:#00b4d8; transform:translateY(-2px); }
 
-    .add-btn, .back-button {
-      flex: 1;
-      padding: 14px 0;
-      font-size: 18px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+/* Exit button (top right) */
+.exit-btn { position:absolute; top:15px; right:15px; background:none; border:none; font-size:2em; font-weight:bold; cursor:pointer; color:#d62828; line-height:1; }
+.exit-btn:hover { color:#ff4d4d; }
 
-    .back-button {
-      background-color: #555;
-      color: white;
-      margin-right: 15px;
-    }
-
-    .back-button:hover {
-      background-color: #333;
-    }
-
-    .add-btn {
-      background-color: #008cba;
-      color: white;
-      margin-left: 15px;
-    }
-
-    .add-btn:hover {
-      background-color: #00b4d8;
-    }
-
-    .no-farms {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      font-size: 2em;
-      font-weight: bold;
-      color: #005f73;
-      margin-top: 50px;
-      text-align: center;
-    }
-
-    @media (max-width: 600px) {
-      .farm-card, .action-buttons {
-        width: 90%;
-      }
-
-      .buttons {
-        position: static;
-        margin-top: auto;
-        justify-content: flex-end;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .add-btn, .back-button {
-        margin: 0;
-        width: 100%;
-      }
-
-      .farm-name {
-        position: static;
-        margin-bottom: 10px;
-        font-size: 2.6em;
-        font-weight: bold;
-        gap: 5px;
-      }
-
-      .rename-btn img {
-        top: 0;
-      }
-    }
-  </style>
+/* Responsive */
+@media(max-width:600px){
+  .farm-card,.action-buttons{width:90%;}
+  .buttons{position:static;margin-top:auto;justify-content:flex-end;}
+  .action-buttons{flex-direction:column;gap:12px;}
+  .add-btn,.back-button{margin:0;width:100%;}
+  .farm-name{position:static;margin-bottom:10px;font-size:2.6em; gap:5px;}
+  .rename-btn img{top:0;}
+  .edit-btn{margin:15px 0 0 auto;}
+}
+</style>
 </head>
 <body>
 
-  <h1>Saved Farms</h1>
+<h1>Saved Farms</h1>
+<div id="farm-container"></div>
 
-  <div id="farm-container">
-    <!-- Start with 0 farms -->
+<div class="action-buttons">
+  <button class="back-button btn" onclick="location.href='1Home.html'">Back</button>
+  <button class="add-btn btn" onclick="addFarm()">+ Add</button>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="confirm-modal">
+    <div>Are you sure?</div>
+    <button class="confirm-btn" id="confirmDelete">Yes</button>
+    <button class="cancel-btn" id="cancelDelete">No</button>
   </div>
+</div>
 
-  <div class="action-buttons">
-    <button class="back-button btn" onclick="location.href='1Home.html'">Back</button>
-    <button class="add-btn btn" onclick="addFarm()">+ Add</button>
+<!-- View Modal -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal view-modal">
+    <button class="exit-btn" id="exitButton">&times;</button>
+    <h2 id="viewFarmName">Farm</h2>
+    <div class="stats-box">
+      <p>Algae (cells/L): <span id="statAlgae">N/A</span></p>
+      <p>pH Value (0-14): <span id="statPH">N/A</span></p>
+      <p>Dissolved Oxygen (mg/L): <span id="statDO">N/A</span></p>
+      <p>Salinity (ppt): <span id="statSalinity">N/A</span></p>
+      <p>Bacterial Load (CFU/mL): <span id="statBacteria">N/A</span></p>
+    </div>
+    <button class="edit-btn" id="editBtn">Edit</button>
   </div>
+</div>
 
-  <script>
-    function renameFarm(button) {
-      const nameSpan = button.parentElement.querySelector('.name-text');
-      const newName = prompt("Enter new farm name:", nameSpan.textContent);
-      if (newName !== null && newName.trim() !== "") {
-        nameSpan.textContent = newName.trim();
+<script>
+let farms = JSON.parse(localStorage.getItem('farms')) || [];
+let farmToDelete = null;
+let editing = false;
+let prevValues = {};
+let currentFarmIndex = null;
+
+function saveToStorage(){
+  localStorage.setItem('farms', JSON.stringify(farms));
+}
+
+function renderFarms(){
+  const container = document.getElementById('farm-container');
+  container.innerHTML='';
+  if(farms.length===0){
+    const msg=document.createElement('div');
+    msg.className='no-farms';
+    msg.innerHTML='No farms :(<br>Add a new one?';
+    container.appendChild(msg);
+    return;
+  }
+
+  farms.forEach((farm,index)=>{
+    const card=document.createElement('div');
+    card.className='farm-card';
+    card.innerHTML=`
+      <div class="farm-name">
+        <span class="name-text">${farm.name}</span>
+        <button class="rename-btn"><img src="https://cdn-icons-png.flaticon.com/512/6325/6325975.png" alt="Rename"></button>
+      </div>
+      <div class="buttons">
+        <button class="btn trash" data-text="🗑️"></button>
+        <button class="btn view">View</button>
+      </div>
+    `;
+    container.appendChild(card);
+
+    card.querySelector('.rename-btn').addEventListener('click',()=>{
+      const newName=prompt("Enter new farm name:",farm.name);
+      if(newName && newName.trim()!==""){
+        farm.name=newName.trim();
+        card.querySelector('.name-text').textContent=farm.name;
+        saveToStorage();
       }
-    }
+    });
 
-    function deleteFarm(button) {
-      const card = button.closest('.farm-card');
-      if (confirm("Are you sure you want to delete this farm?")) {
-        card.remove();
-        updateFarmNumbers();
-        checkNoFarms();
-      }
-    }
+    card.querySelector('.trash').addEventListener('click',()=>{
+      farmToDelete=index;
+      document.getElementById('deleteModal').style.display='flex';
+    });
 
-    function addFarm() {
-      const container = document.getElementById('farm-container');
-      const noFarmsMsg = document.querySelector('.no-farms');
-      if (noFarmsMsg) noFarmsMsg.remove();
+    card.querySelector('.view').addEventListener('click',()=>{
+      currentFarmIndex=index;
+      openViewModal(farm);
+    });
+  });
+}
 
-      const newIndex = container.children.length + 1;
+document.getElementById('confirmDelete').addEventListener('click',()=>{
+  if(farmToDelete!==null){
+    farms.splice(farmToDelete,1);
+    saveToStorage();
+    farmToDelete=null;
+    renderFarms();
+  }
+  document.getElementById('deleteModal').style.display='none';
+});
+document.getElementById('cancelDelete').addEventListener('click',()=>{
+  farmToDelete=null;
+  document.getElementById('deleteModal').style.display='none';
+});
 
-      const card = document.createElement('div');
-      card.className = 'farm-card';
+function addFarm(){
+  const newFarm={name:`Farm ${farms.length+1}`,algae:'N/A',ph:'N/A',do:'N/A',salinity:'N/A',bacteria:'N/A'};
+  farms.push(newFarm);
+  saveToStorage();
+  renderFarms();
+}
 
-      card.innerHTML = `
-        <div class="farm-name">
-          <span class="name-text">Farm ${newIndex}</span>
-          <button class="rename-btn" onclick="renameFarm(this)">
-            <img src="https://cdn-icons-png.flaticon.com/512/6325/6325975.png" alt="Rename">
-          </button>
-        </div>
-        <div class="buttons">
-          <button class="btn trash" data-text="🗑️" onclick="deleteFarm(this)"></button>
-          <button class="btn view">View</button>
-        </div>
-      `;
+function openViewModal(farm){
+  document.getElementById('viewFarmName').textContent=farm.name;
+  const statsMap={statAlgae:'algae',statPH:'ph',statDO:'do',statSalinity:'salinity',statBacteria:'bacteria'};
+  Object.keys(statsMap).forEach(id=>{
+    const el=document.getElementById(id);
+    el.textContent=farm[statsMap[id]]||'N/A';
+    el.style.opacity=(el.textContent==='N/A')?0.3:1;
+  });
 
-      container.appendChild(card);
-    }
+  editing=false;
+  editBtn.textContent='Edit';
+  const modal=document.getElementById('viewModal');
+  modal.style.display='flex';
+  setTimeout(()=>modal.classList.add('show'),10);
+}
 
-    function checkNoFarms() {
-      const container = document.getElementById('farm-container');
-      if (container.children.length === 0) {
-        const msg = document.createElement('div');
-        msg.className = 'no-farms';
-        msg.innerHTML = 'No farms :(<br>Add a new one?';
-        container.appendChild(msg);
-      }
-    }
+const editBtn=document.getElementById('editBtn');
+editBtn.addEventListener('click',()=>{
+  const statsMap={statAlgae:'algae',statPH:'ph',statDO:'do',statSalinity:'salinity',statBacteria:'bacteria'};
+  const farm=farms[currentFarmIndex];
+  if(!editing){
+    prevValues={};
+    Object.keys(statsMap).forEach(id=>{
+      const el=document.getElementById(id);
+      prevValues[id]=el.textContent;
+      el.innerHTML=`<input type="text" value="${el.textContent==='N/A'?'':el.textContent}">`;
+    });
+    editBtn.textContent='Save';
+    editing=true;
+  }else{
+    Object.keys(statsMap).forEach(id=>{
+      const el=document.getElementById(id);
+      const val=el.querySelector('input').value||'N/A';
+      el.textContent=val;
+      el.style.opacity=(val==='N/A')?0.3:1;
+      farm[statsMap[id]]=val;
+    });
+    editBtn.textContent='Edit';
+    editing=false;
+    saveToStorage();
+  }
+});
 
-    function updateFarmNumbers() {
-      const names = document.querySelectorAll('.farm-name .name-text');
-      names.forEach((nameSpan, index) => {
-        nameSpan.textContent = `Farm ${index + 1}`;
-      });
-    }
+document.getElementById('exitButton').addEventListener('click',()=>{
+  const modal=document.getElementById('viewModal');
+  if(editing){
+    const statsMap={statAlgae:'algae',statPH:'ph',statDO:'do',statSalinity:'salinity',statBacteria:'bacteria'};
+    const farm=farms[currentFarmIndex];
+    Object.keys(statsMap).forEach(id=>{
+      const el=document.getElementById(id);
+      el.textContent=farm[statsMap[id]]||'N/A';
+      el.style.opacity=(el.textContent==='N/A')?0.3:1;
+    });
+    editing=false;
+    editBtn.textContent='Edit';
+  }
+  modal.style.display='none';
+});
 
-    checkNoFarms();
-  </script>
-
+renderFarms();
+</script>
 </body>
 </html>
+
+
