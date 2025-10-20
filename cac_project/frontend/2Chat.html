@@ -43,13 +43,68 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      position: relative;
     }
 
     label {
-      flex: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 5px;
       font-weight: bold;
       color: #005f73;
       font-size: 15px;
+      flex: 1.3;
+    }
+
+    .info-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .info-icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .info-icon:hover {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+
+    /* Tooltip opens to the left */
+    .info-icon::after {
+      content: attr(data-tooltip);
+      visibility: hidden;
+      opacity: 0;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px 8px;
+      position: absolute;
+      top: 50%;
+      right: 110%; /* position left of icon */
+      transform: translateY(-50%);
+      white-space: normal;
+      font-size: 12px;
+      max-width: 400px;
+      min-width: 200px;
+      z-index: 10;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .info-icon:hover::after {
+      visibility: visible;
+      opacity: 1;
     }
 
     input[type="number"],
@@ -82,6 +137,7 @@
 
     button:hover {
       background-color: #00b4d8;
+      transform: scale(1.08);
     }
 
     .back-button {
@@ -99,6 +155,7 @@
 
     .back-button:hover {
       background-color: #333;
+      transform: scale(1.08);
     }
   </style>
 </head>
@@ -106,35 +163,62 @@
 
   <div class="container">
     <form id="farmForm">
-      <h1>Fish Farm Data</h1>
+      <h1>Import Farm Data</h1>
 
       <div class="form-row">
-        <label for="algae">Algae:</label>
+        <label for="algae">
+          <span class="info-icon" data-tooltip="Amount of Algae present within your tank. Units are in cells per liter.">
+            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+          </span>
+          Algae (cells/L):
+        </label>
         <input type="number" step="0.1" id="algae" required>
       </div>
 
       <div class="form-row">
-        <label for="phValue">pH Value (0 to 14):</label>
+        <label for="phValue">
+          <span class="info-icon" data-tooltip="Current pH value of your tank's water, or the amount of hydrogen (H+) ions. Values range from 0 - 14, inclusive, and is a logarithmic scale.">
+            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+          </span>
+          PH Value (0 - 14):
+        </label>
         <input type="number" step="0.1" id="phValue" min="0" max="14" required>
       </div>
 
       <div class="form-row">
-        <label for="contaminants">Contaminants:</label>
-        <input type="number" step="0.1" id="contaminants" required>
+        <label for="oxygen">
+          <span class="info-icon" data-tooltip="Levels of dissolved oxygen (DO) in your tank, which additionally indicates the amount of oxygen available for your fish. Units are in milligrams per liter.">
+            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+          </span>
+          Dissolved Oxygen (mg/L):
+        </label>
+        <input type="number" step="0.1" id="oxygen" required>
       </div>
 
       <div class="form-row">
-        <label for="salinity">Salinity (ppt):</label>
-        <input type="number" step="0.1" id="salinity" min = "0" required>
+        <label for="salinity">
+          <span class="info-icon" data-tooltip="Amount of dissolved salt in your tank, which determines the density of the water. Units are indicated in parts per thousand (ppt).">
+            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+          </span>
+          Salinity (ppt):
+        </label>
+        <input type="number" step="0.1" id="salinity" min="0" required>
       </div>
 
       <div class="form-row">
-        <label for="waterQuality">Water Quality:</label>
-        <input type="number" step="0.1" id="waterQuality" required>
+        <label for="bacteria">
+          <span class="info-icon" data-tooltip="Bacteria (i.e E. coli) present in your tank's water. Units are indicated in CFU (colony-forming units) per milliliter.">
+            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+          </span>
+          Bacterial Load (CFU/mL):
+        </label>
+        <input type="number" step="0.1" id="bacteria" required>
       </div>
 
       <div class="form-row" style="flex-direction: column; align-items: flex-start;">
-        <label for="environmentalCondition">Environmental Conditions:</label>
+        <label for="environmentalCondition">
+          Environmental Conditions (Describe):
+        </label>
         <textarea id="environmentalCondition" required></textarea>
       </div>
 
@@ -155,9 +239,9 @@
       const data = {
         algae: parseFloat(document.getElementById("algae").value),
         phValue: parseFloat(document.getElementById("phValue").value),
-        contaminants: parseFloat(document.getElementById("contaminants").value),
+        oxygen: parseFloat(document.getElementById("oxygen").value),
         salinity: parseFloat(document.getElementById("salinity").value),
-        waterQuality: parseFloat(document.getElementById("waterQuality").value),
+        bacteria: parseFloat(document.getElementById("bacteria").value),
         environmentalCondition: document.getElementById("environmentalCondition").value
       };
 
@@ -176,7 +260,45 @@
     });
   </script>
 
+  <audio id="bgMusic0" loop>
+    <source src="AquaticAmbience.mp3" type="audio/mp3">
+  </audio>
+  <audio id="bgMusic1" loop>
+    <source src="ZenGarden.mp3" type="audio/mp3">
+  </audio>
+  <audio id="bgMusic2" loop>
+    <source src="C418.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const tracks = [
+      document.getElementById("bgMusic0"),
+      document.getElementById("bgMusic1"),
+      document.getElementById("bgMusic2")
+    ];
+
+    const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+    const musicEnabled = savedOptions.music ?? true;
+    let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+    const volume = savedOptions.volume ?? 20;
+
+    tracks.forEach(t => {
+      t.volume = volume / 100;
+      t.pause();
+    });
+
+    if (musicEnabled) {
+      tracks[currentTrackIndex].play().catch(() => {
+        const playOnInteraction = () => {
+          tracks[currentTrackIndex].play();
+          window.removeEventListener('click', playOnInteraction);
+          window.removeEventListener('keydown', playOnInteraction);
+        };
+        window.addEventListener('click', playOnInteraction);
+        window.addEventListener('keydown', playOnInteraction);
+      });
+    }
+  </script>
+
 </body>
 </html>
-
-
