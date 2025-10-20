@@ -4,76 +4,30 @@
 <meta charset="UTF-8">
 <title>Saved Farms</title>
 <style>
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background-color: #e8f9ff;
-  margin: 0;
-  padding: 30px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color:#e8f9ff; margin:0; padding:30px 0; display:flex; flex-direction:column; align-items:center; }
+h1 { color:#005f73; margin-bottom:25px; font-size:3.5em; letter-spacing:1px; font-weight:bold; }
+.farm-card { background-color:#ffffffcc; width:420px; height:160px; padding:15px; margin-bottom:15px; border-radius:18px; box-shadow:0 5px 15px rgba(0,0,0,0.12); position:relative; display:flex; flex-direction:column; }
+.farm-name { font-size:2.6em; font-weight:bold; color:#005f73; position:absolute; top:35px; left:55px; display:flex; align-items:center; gap:8px; }
+.rename-btn { background:none; border:none; cursor:pointer; padding:0; display:flex; align-items:center; height:27px; position:relative; transition:transform 0.3s ease; }
+.rename-btn img { width:20px; height:27px; object-fit:contain; position:relative; top:-3px; }
+.buttons { display:flex; gap:12px; position:absolute; bottom:10px; right:15px; }
+.btn { padding:10px 16px; font-size:16px; border-radius:8px; border:none; cursor:pointer; transition:all 0.3s ease; font-family:'Segoe UI',Tahoma,sans-serif; }
+.btn:hover, .rename-btn:hover { transform:scale(1.1); transform-origin:center; }
+.btn.view { background-color:#008cba; color:white; }
+.btn.view:hover { background-color:#00b4d8; }
+.btn.trash { background-color:#d62828; color:white; font-weight:bold; width:50px; overflow:hidden; }
+.btn.trash::before { content:attr(data-text); display:inline-block; transition: all 0.3s ease; transform:translateX(-2px); }
+.btn.trash:hover { width:100px; }
+.btn.trash:hover::before { content:"Delete"; }
+.action-buttons { width:420px; display:flex; justify-content:space-between; margin-top:20px; }
+.add-btn, .back-button { flex:1; padding:14px 0; font-size:18px; border-radius:10px; border:none; cursor:pointer; transition:all 0.3s ease; }
+.back-button { background-color:#555; color:white; margin-right:15px; }
+.back-button:hover { background-color:#333; }
+.add-btn { background-color:#008cba; color:white; margin-left:15px; }
+.add-btn:hover { background-color:#00b4d8; }
+.no-farms { font-size:2em; font-weight:bold; color:#005f73; margin-top:50px; text-align:center; }
 
-h1 {
-  color: #005f73;
-  margin-bottom: 25px;
-  font-size: 3.5em; 
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.farm-card {
-  background-color: #ffffffcc;
-  width: 420px;
-  height: 160px;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 18px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.farm-name {
-  font-size: 2.6em;
-  font-weight: bold;
-  color: #005f73;
-  position: absolute;
-  top: 35px;
-  left: 55px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.rename-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; height: 27px; position: relative; transition: transform 0.3s ease; }
-.rename-btn img { width: 20px; height: 27px; object-fit: contain; position: relative; top: -3px; }
-
-.buttons { display: flex; gap: 12px; position: absolute; bottom: 10px; right: 15px; }
-
-.btn { padding: 10px 16px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Segoe UI', Tahoma, sans-serif; }
-.btn:hover, .rename-btn:hover { transform: scale(1.1); transform-origin: center; }
-
-.btn.view { background-color: #008cba; color: white; }
-.btn.view:hover { background-color: #00b4d8; }
-
-.btn.trash { background-color: #d62828; color: white; font-weight: bold; width: 50px; overflow: hidden; }
-.btn.trash::before { content: attr(data-text); display: inline-block; transition: all 0.3s ease; transform: translateX(-2px); }
-.btn.trash:hover { width: 100px; }
-.btn.trash:hover::before { content: "Delete"; }
-
-.action-buttons { width: 420px; display: flex; justify-content: space-between; margin-top: 20px; }
-.add-btn, .back-button { flex: 1; padding: 14px 0; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.3s ease; }
-.back-button { background-color: #555; color: white; margin-right: 15px; }
-.back-button:hover { background-color: #333; }
-.add-btn { background-color: #008cba; color: white; margin-left: 15px; }
-.add-btn:hover { background-color: #00b4d8; }
-
-.no-farms { font-size: 2em; font-weight: bold; color: #005f73; margin-top: 50px; text-align: center; }
-
-.modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
-
+.modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
 .confirm-modal { background:#fff; padding:25px 35px; border-radius:12px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); font-size:1.4em; color:#333; }
 .confirm-modal button { margin:15px 10px 0 10px; padding:10px 20px; font-size:1em; border-radius:8px; border:none; cursor:pointer; transition:0.2s ease; }
 .confirm-modal .confirm-btn { background-color:#d62828; color:white; }
@@ -82,40 +36,16 @@ h1 {
 
 .view-modal { width:380px; max-width:90%; background:linear-gradient(135deg,#f0f8ff,#e0f7fa); padding:20px 25px 40px 25px; border-radius:20px; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.25); transform:scale(0.8); opacity:0; transition:all 0.25s ease-out; font-family:'Segoe UI',Tahoma,sans-serif; }
 .modal-overlay.show .view-modal { transform:scale(1); opacity:1; }
-
 .view-modal h2 { text-align:center; margin-bottom:15px; color:#005f73; font-size:1.8em; font-weight:bold; }
-
 .stats-box { background-color: #ffffffcc; padding:10px 15px; border-radius:12px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.1); margin-bottom:30px; }
 .stats-box p { display:flex; justify-content:space-between; margin:6px 0; font-weight:600; color:#003049; font-size:0.95em; }
 .stats-box span { color:#0077b6; font-weight:bold; opacity:0.3; }
-
-.stats-box input {
-  width: 60px;
-  font-size: 0.95em;
-  font-weight: 600;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  text-align: right;
-  border: 1px solid #0077b6;
-  border-radius: 4px;
-  padding: 2px 4px;
-  opacity:1;
-}
-
+.stats-box input { width: 60px; font-size:0.95em; font-weight:600; font-family:'Segoe UI',Tahoma,sans-serif; text-align:right; border:1px solid #0077b6; border-radius:4px; padding:2px 4px; opacity:1; }
 .edit-btn { display:block; margin-left:auto; background-color:#008cba; color:white; padding:8px 20px; border-radius:12px; border:none; cursor:pointer; font-size:1em; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:all 0.2s ease; }
 .edit-btn:hover { background-color:#00b4d8; transform:translateY(-2px); }
-
 .exit-btn { position:absolute; top:15px; right:15px; background:none; border:none; font-size:2em; font-weight:bold; cursor:pointer; color:#d62828; line-height:1; }
 .exit-btn:hover { color:#ff4d4d; }
-
-@media(max-width:600px){
-  .farm-card,.action-buttons{width:90%;}
-  .buttons{position:static;margin-top:auto;justify-content:flex-end;}
-  .action-buttons{flex-direction:column;gap:12px;}
-  .add-btn,.back-button{margin:0;width:100%;}
-  .farm-name{position:static;margin-bottom:10px;font-size:2.6em; gap:5px;}
-  .rename-btn img{top:0;}
-  .edit-btn{margin:15px 0 0 auto;}
-}
+@media(max-width:600px){ .farm-card,.action-buttons{width:90%;} .buttons{position:static;margin-top:auto;justify-content:flex-end;} .action-buttons{flex-direction:column;gap:12px;} .add-btn,.back-button{margin:0;width:100%;} .farm-name{position:static;margin-bottom:10px;font-size:2.6em; gap:5px;} .rename-btn img{top:0;} .edit-btn{margin:15px 0 0 auto;} }
 </style>
 </head>
 <body>
@@ -133,6 +63,14 @@ h1 {
     <div>Are you sure?</div>
     <button class="confirm-btn" id="confirmDelete">Yes</button>
     <button class="cancel-btn" id="cancelDelete">No</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="exitModal" style="z-index:3000;">
+  <div class="confirm-modal">
+    <div>Exit without saving changes?</div>
+    <button class="confirm-btn" id="confirmExit">Yes</button>
+    <button class="cancel-btn" id="cancelExit">No</button>
   </div>
 </div>
 
@@ -158,9 +96,7 @@ let editing = false;
 let prevValues = {};
 let currentFarmIndex = null;
 
-function saveToStorage(){
-  localStorage.setItem('farms', JSON.stringify(farms));
-}
+function saveToStorage(){ localStorage.setItem('farms', JSON.stringify(farms)); }
 
 function renderFarms(){
   const container = document.getElementById('farm-container');
@@ -172,7 +108,6 @@ function renderFarms(){
     container.appendChild(msg);
     return;
   }
-
   farms.forEach((farm,index)=>{
     const card=document.createElement('div');
     card.className='farm-card';
@@ -190,11 +125,7 @@ function renderFarms(){
 
     card.querySelector('.rename-btn').addEventListener('click',()=>{
       const newName=prompt("Enter new farm name:",farm.name);
-      if(newName && newName.trim()!==""){
-        farm.name=newName.trim();
-        card.querySelector('.name-text').textContent=farm.name;
-        saveToStorage();
-      }
+      if(newName && newName.trim()!==""){ farm.name=newName.trim(); card.querySelector('.name-text').textContent=farm.name; saveToStorage(); }
     });
 
     card.querySelector('.trash').addEventListener('click',()=>{
@@ -210,25 +141,12 @@ function renderFarms(){
 }
 
 document.getElementById('confirmDelete').addEventListener('click',()=>{
-  if(farmToDelete!==null){
-    farms.splice(farmToDelete,1);
-    saveToStorage();
-    farmToDelete=null;
-    renderFarms();
-  }
+  if(farmToDelete!==null){ farms.splice(farmToDelete,1); saveToStorage(); farmToDelete=null; renderFarms(); }
   document.getElementById('deleteModal').style.display='none';
 });
-document.getElementById('cancelDelete').addEventListener('click',()=>{
-  farmToDelete=null;
-  document.getElementById('deleteModal').style.display='none';
-});
+document.getElementById('cancelDelete').addEventListener('click',()=>{ farmToDelete=null; document.getElementById('deleteModal').style.display='none'; });
 
-function addFarm(){
-  const newFarm={name:`Farm ${farms.length+1}`,algae:'N/A',ph:'N/A',do:'N/A',salinity:'N/A',bacteria:'N/A'};
-  farms.push(newFarm);
-  saveToStorage();
-  renderFarms();
-}
+function addFarm(){ const newFarm={name:`Farm ${farms.length+1}`,algae:'N/A',ph:'N/A',do:'N/A',salinity:'N/A',bacteria:'N/A'}; farms.push(newFarm); saveToStorage(); renderFarms(); }
 
 function openViewModal(farm){
   document.getElementById('viewFarmName').textContent=farm.name;
@@ -238,12 +156,9 @@ function openViewModal(farm){
     el.textContent=farm[statsMap[id]]||'N/A';
     el.style.opacity=(el.textContent==='N/A')?0.3:1;
   });
-
-  editing=false;
-  editBtn.textContent='Edit';
-  const modal=document.getElementById('viewModal');
-  modal.style.display='flex';
-  setTimeout(()=>modal.classList.add('show'),10);
+  editing=false; editBtn.textContent='Edit';
+  document.getElementById('viewModal').style.display='flex';
+  setTimeout(()=>document.getElementById('viewModal').classList.add('show'),10);
 }
 
 const editBtn=document.getElementById('editBtn');
@@ -263,8 +178,7 @@ editBtn.addEventListener('click',()=>{
     Object.keys(statsMap).forEach(id=>{
       const el=document.getElementById(id);
       const val=el.querySelector('input').value||'N/A';
-      el.textContent=val;
-      el.style.opacity=(val==='N/A')?0.3:1;
+      el.textContent=val; el.style.opacity=(val==='N/A')?0.3:1;
       farm[statsMap[id]]=val;
     });
     editBtn.textContent='Edit';
@@ -274,23 +188,25 @@ editBtn.addEventListener('click',()=>{
 });
 
 document.getElementById('exitButton').addEventListener('click',()=>{
-  const modal=document.getElementById('viewModal');
-  if(editing){
-    const statsMap={statAlgae:'algae',statPH:'ph',statDO:'do',statSalinity:'salinity',statBacteria:'bacteria'};
-    const farm=farms[currentFarmIndex];
-    Object.keys(statsMap).forEach(id=>{
-      const el=document.getElementById(id);
-      el.textContent=farm[statsMap[id]]||'N/A';
-      el.style.opacity=(el.textContent==='N/A')?0.3:1;
-    });
-    editing=false;
-    editBtn.textContent='Edit';
-  }
-  modal.style.display='none';
+  if(editing){ document.getElementById('exitModal').style.display='flex'; }
+  else{ document.getElementById('viewModal').style.display='none'; }
 });
+
+document.getElementById('confirmExit').addEventListener('click',()=>{
+  const statsMap={statAlgae:'algae',statPH:'ph',statDO:'do',statSalinity:'salinity',statBacteria:'bacteria'};
+  const farm=farms[currentFarmIndex];
+  Object.keys(statsMap).forEach(id=>{
+    const el=document.getElementById(id);
+    el.textContent=farm[statsMap[id]]||'N/A';
+    el.style.opacity=(el.textContent==='N/A')?0.3:1;
+  });
+  editing=false; editBtn.textContent='Edit';
+  document.getElementById('exitModal').style.display='none';
+  document.getElementById('viewModal').style.display='none';
+});
+document.getElementById('cancelExit').addEventListener('click',()=>{ document.getElementById('exitModal').style.display='none'; });
 
 renderFarms();
 </script>
 </body>
 </html>
-
