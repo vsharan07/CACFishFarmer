@@ -1,7 +1,224 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Welcome to Page 4!</h1>
-    <p>You made it to the fourth page 🎉</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #e8f9ff;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      position: relative;
+      padding-top: 40px;
+    }
+
+    h1 {
+      font-size: 5em;
+      margin-bottom: 30px;
+      color: #005f73;
+    }
+
+    .register-button {
+      padding: 18px 36px;
+      font-size: 1.8em;
+      border: 3px solid #005f73;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      margin-bottom: 50px;
+      transition: all 0.3s ease;
+    }
+
+    .register-button:hover {
+      background: #008cba;
+      color: white;
+      transform: scale(1.08);
+    }
+
+    /* Back button: light gray normally, dark gray on hover */
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 200px;
+      padding: 16px 0;
+      background-color: #555555; /* light gray default */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      background-color: #333333; /* dark gray on hover */
+      transform: scale(1.03);
+    }
+
+    .back-button:active {
+      background-color: #111111; /* darkest on click */
+    }
+
+    .fish-container {
+      position: absolute;
+      right: 20px;
+      bottom: 100px; 
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+
+    .fish-container img.fish {
+      width: 250px;
+      height: auto;
+      position: relative;
+      bottom: -45px; 
+    }
+
+    .bubble-wrapper {
+      position: relative;
+      width: 200px;
+      height: auto;
+    }
+
+    .bubble-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .bubble-text {
+      position: absolute;
+      top: 42px; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #005f73;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Account</h1>
+  <button class="register-button">Register / Sign-up</button>
+
+  <div class="fish-container">
+    <div class="bubble-wrapper" style="bottom:50px; position:relative;">
+      <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
+      <div id="fish-speech" class="bubble-text">Placeholder text</div>
+    </div>
+    <img class="fish" src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
+  </div>
+
+  <!-- Back button -->
+  <button class="back-button" onclick="window.history.back()">Back</button>
+
+  <audio id="bgMusic0" loop>
+    <source src="AquaticAmbience.mp3" type="audio/mp3">
+  </audio>
+  <audio id="bgMusic1" loop>
+    <source src="ZenGarden.mp3" type="audio/mp3">
+  </audio>
+  <audio id="bgMusic2" loop>
+    <source src="C418.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const tracks = [
+      document.getElementById("bgMusic0"),
+      document.getElementById("bgMusic1"),
+      document.getElementById("bgMusic2")
+    ];
+
+    const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+    const musicEnabled = savedOptions.music ?? true;
+    let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+    const volume = savedOptions.volume ?? 20;
+
+    tracks.forEach(t => {
+      t.volume = volume / 100;
+      t.pause();
+    });
+
+    if (musicEnabled) {
+      tracks[currentTrackIndex].play().catch(() => {
+        const playOnInteraction = () => {
+          tracks[currentTrackIndex].play();
+          window.removeEventListener('click', playOnInteraction);
+          window.removeEventListener('keydown', playOnInteraction);
+        };
+        window.addEventListener('click', playOnInteraction);
+        window.addEventListener('keydown', playOnInteraction);
+      });
+    }
+  </script>
+
+  <script>
+    const phrases = [
+      "I byte fish",
+      "Buffering...",
+      "Swim.exe",
+      "404 pond",
+      "SeaProtocol",
+      "DataPlankton",
+      "Kernel Splash",
+      "StreamOverflow",
+      "glub glub glub",
+      "System splash",
+      "Beep…blub!",
+      "404 Fish Not",
+      "I byte water",
+      "Fin-tastic!",
+      "Too many scales",
+      "Routing Wetware..",
+      "Fishy.exe",
+      "Bloop.bloop",
+      "Ctrl+Alt+Swim",
+      "Error: scales"
+    ];
+
+    const fishBubble = document.getElementById("fish-speech");
+
+    let currentPhrase = "";
+    let typingIndex = 0;
+    let phraseIndex = 0;
+
+    function typePhrase(phrase, callback) {
+      typingIndex = 0;
+      currentPhrase = "";
+      fishBubble.textContent = "";
+
+      const typer = setInterval(() => {
+        currentPhrase += phrase[typingIndex];
+        fishBubble.textContent = currentPhrase;
+        typingIndex++;
+        if (typingIndex === phrase.length) {
+          clearInterval(typer);
+          setTimeout(callback, 3000); 
+        }
+      }, 100); 
+    }
+
+    function nextPhrase() {
+      phraseIndex = Math.floor(Math.random() * phrases.length);
+      typePhrase(phrases[phraseIndex], nextPhrase);
+    }
+
+    nextPhrase();
+  </script>
+
+</body>
 </html>
