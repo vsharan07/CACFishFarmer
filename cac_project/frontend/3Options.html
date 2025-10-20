@@ -202,7 +202,7 @@
       <div class="option-row">
         <label for="musicToggle">Music</label>
         <label class="toggle-switch">
-          <input type="checkbox" id="musicToggle" checked>
+          <input type="checkbox" id="musicToggle">
           <span class="slider"></span>
         </label>
       </div>
@@ -219,7 +219,7 @@
       <div class="option-row">
         <label for="volumeSlider">Volume</label>
         <div style="flex:1; display:flex; align-items:center; margin-left:20px; position:relative;">
-          <input type="range" id="volumeSlider" min="0" max="100" value="20" style="flex:1;">
+          <input type="range" id="volumeSlider" min="0" max="100">
           <span id="volumeTooltip" 
                 style="
                   position:absolute;
@@ -233,14 +233,14 @@
                   font-size:14px;
                   display:none;
                   white-space:nowrap;
-                ">15%</span>
+                ">10%</span>
         </div>
       </div>
 
       <div class="option-row">
         <label for="rationaleToggle">Include Rationale</label>
         <label class="toggle-switch">
-          <input type="checkbox" id="rationaleToggle" checked>
+          <input type="checkbox" id="rationaleToggle">
           <span class="slider"></span>
         </label>
       </div>
@@ -282,52 +282,52 @@
     const tooltip = document.getElementById("volumeTooltip");
     const musicToggle = document.getElementById("musicToggle");
     const musicSelect = document.getElementById("musicSelect");
+    const rationaleToggle = document.getElementById("rationaleToggle");
+    const geoRegion = document.getElementById("geoRegion");
+
     const tracks = [
       document.getElementById("backgroundMusic"),
       document.getElementById("music1"),
       document.getElementById("music2")
     ];
 
-    tracks[0].volume = slider.value / 100; 
-    tracks[1].volume = slider.value / 100; 
-    tracks[2].volume = Math.min(slider.value / 100 * 1.15, 1);
-
     let currentTrackIndex = 0;
-    function playTrack(index) {
-      tracks.forEach((t, i) => {
-        if(i === index && musicToggle.checked){
-          t.currentTime = 0;
-          t.play();
-        } else {
-          t.pause();
-        }
-      });
-      currentTrackIndex = index;
-    }
 
-    playTrack(currentTrackIndex);
+    // Load saved options or defaults
+    const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+    musicToggle.checked = savedOptions.music ?? true;
+    musicSelect.value = savedOptions.track ?? 0;
+    slider.value = savedOptions.volume ?? 10; // default to 10%
+    tooltip.textContent = slider.value + "%";
+    rationaleToggle.checked = savedOptions.includeRationale ?? true;
+    geoRegion.value = savedOptions.region ?? "north-america";
+
+    tracks.forEach((t, i) => {
+      t.volume = slider.value / 100;
+      t.pause();
+    });
+
+    currentTrackIndex = parseInt(musicSelect.value);
+
+    // Play current track if music enabled
+    if (musicToggle.checked) tracks[currentTrackIndex].play().catch(()=>{});
 
     musicToggle.addEventListener("change", () => {
       if (musicToggle.checked) {
-        tracks[currentTrackIndex].play();
+        tracks[currentTrackIndex].play().catch(()=>{});
       } else {
         tracks[currentTrackIndex].pause();
       }
     });
 
     musicSelect.addEventListener("change", () => {
-      playTrack(parseInt(musicSelect.value));
+      tracks.forEach(t => t.pause());
+      currentTrackIndex = parseInt(musicSelect.value);
+      if (musicToggle.checked) tracks[currentTrackIndex].play().catch(()=>{});
     });
 
-    slider.addEventListener("mouseenter", () => {
-      tooltip.style.display = "inline-block";
-      tooltip.textContent = slider.value + "%";
-    });
-
-    slider.addEventListener("mouseleave", () => {
-      tooltip.style.display = "none";
-    });
-
+    slider.addEventListener("mouseenter", () => { tooltip.style.display = "inline-block"; tooltip.textContent = slider.value + "%"; });
+    slider.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
     slider.addEventListener("input", () => {
       tooltip.textContent = slider.value + "%";
       const percent = slider.value / slider.max;
@@ -343,10 +343,10 @@
         music: musicToggle.checked,
         track: musicSelect.value,
         volume: slider.value,
-        includeRationale: document.getElementById("rationaleToggle").checked,
-        region: document.getElementById("geoRegion").value
+        includeRationale: rationaleToggle.checked,
+        region: geoRegion.value
       };
-      console.log("Options saved:", options);
+      localStorage.setItem('options', JSON.stringify(options));
       alert("Preferences saved!");
     }
   </script>
