@@ -107,6 +107,47 @@
   </style>
 </head>
 
+<audio id="bgMusic0" loop>
+  <source src="AquaticAmbience.mp3" type="audio/mp3">
+</audio>
+<audio id="bgMusic1" loop>
+  <source src="ZenGarden.mp3" type="audio/mp3">
+</audio>
+<audio id="bgMusic2" loop>
+  <source src="C418.mp3" type="audio/mp3">
+</audio>
+
+<script>
+  const tracks = [
+    document.getElementById("bgMusic0"),
+    document.getElementById("bgMusic1"),
+    document.getElementById("bgMusic2")
+  ];
+
+  const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+  const musicEnabled = savedOptions.music ?? true;
+  let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+  const volume = savedOptions.volume ?? 20;
+
+  tracks.forEach(t => {
+    t.volume = volume / 100;
+    t.pause();
+  });
+
+  if (musicEnabled) {
+    tracks[currentTrackIndex].play().catch(() => {
+      const playOnInteraction = () => {
+        tracks[currentTrackIndex].play();
+        window.removeEventListener('click', playOnInteraction);
+        window.removeEventListener('keydown', playOnInteraction);
+      };
+      window.addEventListener('click', playOnInteraction);
+      window.addEventListener('keydown', playOnInteraction);
+    });
+  }
+
+</script>
+
 <body>
 
   <h1>FishFarmer.AI</h1>
@@ -191,4 +232,5 @@ function nextPhrase() {
 
 nextPhrase();
 </script>
-
+</body>
+</html>
