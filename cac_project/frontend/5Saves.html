@@ -4,48 +4,330 @@
 <meta charset="UTF-8">
 <title>Saved Farms</title>
 <style>
-body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color:#e8f9ff; margin:0; padding:30px 0; display:flex; flex-direction:column; align-items:center; }
-h1 { color:#005f73; margin-bottom:25px; font-size:3.5em; letter-spacing:1px; font-weight:bold; }
-.farm-card { background-color:#ffffffcc; width:420px; height:160px; padding:15px; margin-bottom:15px; border-radius:18px; box-shadow:0 5px 15px rgba(0,0,0,0.12); position:relative; display:flex; flex-direction:column; }
-.farm-name { font-size:2.6em; font-weight:bold; color:#005f73; position:absolute; top:35px; left:55px; display:flex; align-items:center; gap:8px; }
-.rename-btn { background:none; border:none; cursor:pointer; padding:0; display:flex; align-items:center; height:27px; position:relative; transition:transform 0.3s ease; }
-.rename-btn img { width:20px; height:27px; object-fit:contain; position:relative; top:-3px; }
-.buttons { display:flex; gap:12px; position:absolute; bottom:10px; right:15px; }
-.btn { padding:10px 16px; font-size:16px; border-radius:8px; border:none; cursor:pointer; transition:all 0.3s ease; font-family:'Segoe UI',Tahoma,sans-serif; }
-.btn:hover, .rename-btn:hover { transform:scale(1.1); transform-origin:center; }
-.btn.view { background-color:#008cba; color:white; }
-.btn.view:hover { background-color:#00b4d8; }
-.btn.trash { background-color:#d62828; color:white; font-weight:bold; width:50px; overflow:hidden; }
-.btn.trash::before { content:attr(data-text); display:inline-block; transition: all 0.3s ease; transform:translateX(-2px); }
-.btn.trash:hover { width:100px; }
-.btn.trash:hover::before { content:"Delete"; }
-.action-buttons { width:420px; display:flex; justify-content:space-between; margin-top:20px; }
-.add-btn, .back-button { flex:1; padding:14px 0; font-size:18px; border-radius:10px; border:none; cursor:pointer; transition:all 0.3s ease; }
-.back-button { background-color:#555; color:white; margin-right:15px; }
-.back-button:hover { background-color:#333; }
-.add-btn { background-color:#008cba; color:white; margin-left:15px; }
-.add-btn:hover { background-color:#00b4d8; }
-.no-farms { font-size:2em; font-weight:bold; color:#005f73; margin-top:50px; text-align:center; }
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+  margin: 0;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh; /* ensures background fills viewport */
+}
 
-.modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
-.confirm-modal { background:#fff; padding:25px 35px; border-radius:12px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); font-size:1.4em; color:#333; }
-.confirm-modal button { margin:15px 10px 0 10px; padding:10px 20px; font-size:1em; border-radius:8px; border:none; cursor:pointer; transition:0.2s ease; }
-.confirm-modal .confirm-btn { background-color:#d62828; color:white; }
-.confirm-modal .cancel-btn { background-color:#555; color:white; }
-.confirm-modal button:hover { opacity:0.85; }
+h1 {
+  color: #004e64;
+  margin-bottom: 25px;
+  font-size: 3.5em;
+  letter-spacing: 1px;
+  font-weight: bold;
+  text-shadow: 0 0 8px #a8e0ff;
+}
 
-.view-modal { width:380px; max-width:90%; background:linear-gradient(135deg,#f0f8ff,#e0f7fa); padding:20px 25px 40px 25px; border-radius:20px; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.25); transform:scale(0.8); opacity:0; transition:all 0.25s ease-out; font-family:'Segoe UI',Tahoma,sans-serif; }
-.modal-overlay.show .view-modal { transform:scale(1); opacity:1; }
-.view-modal h2 { text-align:center; margin-bottom:15px; color:#005f73; font-size:1.8em; font-weight:bold; }
-.stats-box { background-color: #ffffffcc; padding:10px 15px; border-radius:12px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.1); margin-bottom:30px; }
-.stats-box p { display:flex; justify-content:space-between; margin:6px 0; font-weight:600; color:#003049; font-size:0.95em; }
-.stats-box span { color:#0077b6; font-weight:bold; opacity:0.3; }
-.stats-box input { width: 60px; font-size:0.95em; font-weight:600; font-family:'Segoe UI',Tahoma,sans-serif; text-align:right; border:1px solid #0077b6; border-radius:4px; padding:2px 4px; opacity:1; }
-.edit-btn { display:block; margin-left:auto; background-color:#008cba; color:white; padding:8px 20px; border-radius:12px; border:none; cursor:pointer; font-size:1em; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:all 0.2s ease; }
-.edit-btn:hover { background-color:#00b4d8; transform:translateY(-2px); }
-.exit-btn { position:absolute; top:15px; right:15px; background:none; border:none; font-size:2em; font-weight:bold; cursor:pointer; color:#d62828; line-height:1; }
-.exit-btn:hover { color:#ff4d4d; }
-@media(max-width:600px){ .farm-card,.action-buttons{width:90%;} .buttons{position:static;margin-top:auto;justify-content:flex-end;} .action-buttons{flex-direction:column;gap:12px;} .add-btn,.back-button{margin:0;width:100%;} .farm-name{position:static;margin-bottom:10px;font-size:2.6em; gap:5px;} .rename-btn img{top:0;} .edit-btn{margin:15px 0 0 auto;} }
+.farm-card {
+  background-color: #ffffffcc;
+  width: 420px;
+  height: 160px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.farm-name {
+  font-size: 2.6em;
+  font-weight: bold;
+  color: #004e64;
+  position: absolute;
+  top: 35px;
+  left: 55px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rename-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: 27px;
+  transition: transform 0.3s ease;
+}
+
+.rename-btn img {
+  width: 20px;
+  height: 27px;
+  object-fit: contain;
+  position: relative;
+  top: -3px;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+}
+
+.btn {
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+.btn:hover, .rename-btn:hover {
+  transform: scale(1.1);
+}
+
+.btn.view {
+  background: linear-gradient(90deg, #00b4d8, #0096c7);
+  color: white;
+  box-shadow: 0 0 12px rgba(0,180,216,0.5);
+}
+
+.btn.view:hover {
+  background: linear-gradient(90deg, #0096c7, #0077b6);
+  box-shadow: 0 0 18px rgba(0,180,216,0.8);
+}
+
+.btn.trash {
+  background-color: #d62828;
+  color: white;
+  font-weight: bold;
+  width: 50px;
+  overflow: hidden;
+}
+
+.btn.trash::before {
+  content: attr(data-text);
+  display: inline-block;
+  transition: all 0.3s ease;
+  transform: translateX(-2px);
+}
+
+.btn.trash:hover {
+  width: 100px;
+}
+
+.btn.trash:hover::before {
+  content: "Delete";
+}
+
+.action-buttons {
+  width: 420px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.add-btn, .back-button {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+}
+
+.back-button {
+  background-color: #555;
+  color: white;
+  margin-right: 15px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+.back-button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+
+.add-btn {
+  background: linear-gradient(90deg, #00b4d8, #0096c7);
+  color: white;
+  margin-left: 15px;
+  box-shadow: 0 0 12px rgba(0,180,216,0.5);
+}
+
+.add-btn:hover {
+  background: linear-gradient(90deg, #0096c7, #0077b6);
+  box-shadow: 0 0 18px rgba(0,180,216,0.8);
+}
+
+.no-farms {
+  font-size: 2em;
+  font-weight: bold;
+  color: #004e64;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  font-size: 1.4em;
+  color: #333;
+}
+
+.confirm-modal button {
+  margin: 15px 10px 0 10px;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.confirm-modal .confirm-btn {
+  background-color: #d62828;
+  color: white;
+}
+
+.confirm-modal .cancel-btn {
+  background-color: #555;
+  color: white;
+}
+
+.confirm-modal button:hover { opacity: 0.85; }
+
+.view-modal {
+  width: 380px;
+  max-width: 90%;
+  background: linear-gradient(135deg,#f0f8ff,#e0f7fa);
+  padding: 20px 25px 40px 25px;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.25s ease-out;
+}
+
+.modal-overlay.show .view-modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.view-modal h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #004e64;
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.stats-box {
+  background-color: #ffffffcc;
+  padding: 10px 15px;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.stats-box p {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-weight: 600;
+  color: #003049;
+  font-size: 0.95em;
+}
+
+.stats-box span {
+  color: #0077b6;
+  font-weight: bold;
+  opacity: 0.3;
+}
+
+.stats-box input {
+  width: 60px;
+  font-size: 0.95em;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  text-align: right;
+  border: 1px solid #0077b6;
+  border-radius: 4px;
+  padding: 2px 4px;
+  opacity: 1;
+}
+
+.edit-btn {
+  display: block;
+  margin-left: auto;
+  background: linear-gradient(90deg, #00b4d8, #0096c7);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(90deg, #0096c7, #0077b6);
+  transform: translateY(-2px);
+}
+
+.exit-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+  color: #d62828;
+  line-height: 1;
+}
+
+.exit-btn:hover {
+  color: #ff4d4d;
+}
+
+@media(max-width:600px){
+  .farm-card,.action-buttons{width:90%;}
+  .buttons{position:static;margin-top:auto;justify-content:flex-end;}
+  .action-buttons{flex-direction:column;gap:12px;}
+  .add-btn,.back-button{margin:0;width:100%;}
+  .farm-name{position:static;margin-bottom:10px;font-size:2.6em;gap:5px;}
+  .rename-btn img{top:0;}
+  .edit-btn{margin:15px 0 0 auto;}
+}
 </style>
 </head>
 <body>
@@ -209,7 +491,6 @@ document.getElementById('cancelExit').addEventListener('click',()=>{ document.ge
 renderFarms();
 </script>
 
-
 <audio id="bgMusic0" loop>
   <source src="AquaticAmbience.mp3" type="audio/mp3">
 </audio>
@@ -248,7 +529,6 @@ renderFarms();
       window.addEventListener('keydown', playOnInteraction);
     });
   }
-
 </script>
 
 </body>
