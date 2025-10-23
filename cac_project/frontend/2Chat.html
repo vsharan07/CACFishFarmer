@@ -6,36 +6,39 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #e8f9ff;
+      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      overflow-x: hidden;
     }
 
     .container {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
+      gap: 15px;
     }
 
     form {
       background: #ffffffcc;
-      padding: 25px 35px;
+      padding: 30px 40px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 18px;
       width: 350px;
     }
 
     h1 {
       text-align: center;
-      color: #005f73;
-      margin-bottom: 5px;
+      color: #004e64;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+      text-shadow: 0 0 8px #a8e0ff;
     }
 
     .form-row {
@@ -51,7 +54,7 @@
       align-items: center;
       gap: 5px;
       font-weight: bold;
-      color: #005f73;
+      color: #004e64;
       font-size: 15px;
       flex: 1.3;
     }
@@ -80,7 +83,6 @@
       opacity: 1;
     }
 
-    /* Tooltip opens to the left */
     .info-icon::after {
       content: attr(data-tooltip);
       visibility: hidden;
@@ -92,7 +94,7 @@
       padding: 5px 8px;
       position: absolute;
       top: 50%;
-      right: 110%; /* position left of icon */
+      right: 110%;
       transform: translateY(-50%);
       white-space: normal;
       font-size: 12px;
@@ -110,8 +112,8 @@
     input[type="number"],
     textarea {
       flex: 1.7;
-      padding: 6px 8px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
       font-size: 14px;
@@ -125,37 +127,57 @@
 
     button {
       margin-top: 10px;
-      background-color: #008cba;
+      background: linear-gradient(90deg, #00b4d8, #0096c7);
       color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
+      padding: 12px 0;
+      border-radius: 12px;
       font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
     }
 
     button:hover {
-      background-color: #00b4d8;
-      transform: scale(1.08);
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(0, 180, 216, 0.8);
+      background: linear-gradient(90deg, #0096c7, #0077b6);
+    }
+
+    button:active {
+      transform: scale(0.98);
+      background: linear-gradient(90deg, #0077b6, #00b4d8);
     }
 
     .back-button {
+      width: 140px;
+      padding: 10px 0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
       background-color: #555;
       color: white;
-      padding: 10px 0;       
-      width: 120px;         
-      border-radius: 8px;
       border: none;
       cursor: pointer;
-      text-align: center;
-      font-size: 16px;
       transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
 
     .back-button:hover {
       background-color: #333;
       transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 800px) {
+      form {
+        width: 90%;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2em;
+      }
     }
   </style>
 </head>
@@ -177,7 +199,7 @@
 
       <div class="form-row">
         <label for="phValue">
-          <span class="info-icon" data-tooltip="Current pH value of your tank's water, or the amount of hydrogen (H+) ions. Values range from 0 - 14, inclusive, and is a logarithmic scale.">
+          <span class="info-icon" data-tooltip="Current pH value of your tank's water, values range from 0 - 14.">
             <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
           </span>
           PH Value (0 - 14):
@@ -187,7 +209,7 @@
 
       <div class="form-row">
         <label for="oxygen">
-          <span class="info-icon" data-tooltip="Levels of dissolved oxygen (DO) in your tank, which additionally indicates the amount of oxygen available for your fish. Units are in milligrams per liter.">
+          <span class="info-icon" data-tooltip="Levels of dissolved oxygen in your tank. Units: mg/L">
             <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
           </span>
           Dissolved Oxygen (mg/L):
@@ -197,7 +219,7 @@
 
       <div class="form-row">
         <label for="salinity">
-          <span class="info-icon" data-tooltip="Amount of dissolved salt in your tank, which determines the density of the water. Units are indicated in parts per thousand (ppt).">
+          <span class="info-icon" data-tooltip="Amount of dissolved salt in your tank (ppt).">
             <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
           </span>
           Salinity (ppt):
@@ -207,7 +229,7 @@
 
       <div class="form-row">
         <label for="bacteria">
-          <span class="info-icon" data-tooltip="Bacteria (i.e E. coli) present in your tank's water. Units are indicated in CFU (colony-forming units) per milliliter.">
+          <span class="info-icon" data-tooltip="Bacteria present in your tank's water (CFU/mL).">
             <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
           </span>
           Bacterial Load (CFU/mL):
@@ -225,40 +247,8 @@
       <button type="submit">Analyze</button>
     </form>
 
-    <button class="back-button" type="button" onclick="location.href='1Home.html'">
-      Back
-    </button>
+    <button class="back-button" type="button" onclick="location.href='1Home.html'">Back</button>
   </div>
-
-  <script>
-    const farmForm = document.getElementById("farmForm");
-
-    farmForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const data = {
-        algae: parseFloat(document.getElementById("algae").value),
-        phValue: parseFloat(document.getElementById("phValue").value),
-        oxygen: parseFloat(document.getElementById("oxygen").value),
-        salinity: parseFloat(document.getElementById("salinity").value),
-        bacteria: parseFloat(document.getElementById("bacteria").value),
-        environmentalCondition: document.getElementById("environmentalCondition").value
-      };
-
-      try {
-        const res = await fetch("http://127.0.0.1:8000/callOpenAI", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(data)
-        });
-
-        const json = await res.json();
-        alert(json.response || json.error || "No response");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-  </script>
 
   <audio id="bgMusic0" loop>
     <source src="AquaticAmbience.mp3" type="audio/mp3">
@@ -282,10 +272,7 @@
     let currentTrackIndex = parseInt(savedOptions.track ?? 0);
     const volume = savedOptions.volume ?? 20;
 
-    tracks.forEach(t => {
-      t.volume = volume / 100;
-      t.pause();
-    });
+    tracks.forEach(t => { t.volume = volume / 100; t.pause(); });
 
     if (musicEnabled) {
       tracks[currentTrackIndex].play().catch(() => {
@@ -298,7 +285,30 @@
         window.addEventListener('keydown', playOnInteraction);
       });
     }
-  </script>
 
+    const farmForm = document.getElementById("farmForm");
+    farmForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        algae: parseFloat(document.getElementById("algae").value),
+        phValue: parseFloat(document.getElementById("phValue").value),
+        oxygen: parseFloat(document.getElementById("oxygen").value),
+        salinity: parseFloat(document.getElementById("salinity").value),
+        bacteria: parseFloat(document.getElementById("bacteria").value),
+        environmentalCondition: document.getElementById("environmentalCondition").value
+      };
+      try {
+        const res = await fetch("http://127.0.0.1:8000/callOpenAI", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        alert(json.response || json.error || "No response");
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
 </body>
 </html>
