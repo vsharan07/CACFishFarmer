@@ -1,105 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>FishFarmer.AI</title>
   <style>
-      body {
-    background-color: #e8f9ff;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    margin: 0;
-    padding: 0px 0 80px 0; 
-    text-align: center;
-  }
-
-
-    h1 {
-      color: #005f73;
-      font-size: 3.5em; 
-      margin-bottom: 40px;
+    body {
+      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0 0 80px 0;
+      text-align: center;
+      overflow-x: hidden;
     }
 
-    .container 
-    { display: flex; 
-      align-items: flex-start; 
-      gap: 15px; justify-content: center; 
-      margin-bottom: 40px; 
-      margin-left: -10%; 
-      flex-wrap: nowrap; 
-    } 
-    
-    .chat-bubble 
-    { background-image: url('https://www.freeiconspng.com/uploads/speech-bubble-png-27.png'); 
-    background-size: contain; 
-    background-repeat: no-repeat; 
-    background-position: center; 
-    width: 170px; 
-    height: 75px; 
-    display: flex; 
-    align-items: 
-    flex-start; 
-    justify-content: center; 
-    padding-top: 29px; 
-    font-size: 16px; 
-    text-align: center; 
-    font-family: 'Poppins', sans-serif; 
-    color: #005f73; 
-    font-weight: 700; 
-  }
+    h1 {
+      color: #004e64;
+      font-size: 3.5em;
+      margin: 50px 0 40px 0;
+      text-shadow: 0 0 12px #a8e0ff;
+    }
 
+    /* Fish + bubble container slightly lower and more to the left */
+    .container {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: nowrap;
+      position: relative;
+      bottom: 38px; /* vertical positioning */
+      left: -60px;   /* shifted further left */
+    }
+
+    /* Chat bubble */
+    .chat-bubble {
+      background-image: url('https://www.freeiconspng.com/uploads/speech-bubble-png-27.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 170px;
+      height: 75px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 29px;
+      font-size: 16px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      color: #004e64;
+      font-weight: 700;
+      opacity: 0.9;
+      transition: opacity 0.4s ease;
+      position: relative;
+      bottom: 0;
+      animation: bubbleFloatExact 5s ease-in-out infinite;
+    }
+
+    /* Fish movement */
     .container img {
-      width: 300px; 
+      width: 300px;
       height: auto;
       display: block;
+      position: relative;
+      bottom: -45px;
+      animation: swimFloatExact 5s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px #a2e8ff);
+    }
+
+    @keyframes swimFloatExact {
+      0%, 100% { transform: translateX(0) translateY(0) rotateY(0deg); }
+      25% { transform: translateX(4px) translateY(-5px) rotateY(2deg); }
+      50% { transform: translateX(-4px) translateY(-8px) rotateY(-2deg); }
+      75% { transform: translateX(3px) translateY(-4px) rotateY(1deg); }
+    }
+
+    @keyframes bubbleFloatExact {
+      0%, 100% { transform: translateY(0); }
+      25% { transform: translateY(-5px); }
+      50% { transform: translateY(-9px); }
+      75% { transform: translateY(-4px); }
     }
 
     button {
       display: block;
-      width: 380px;     
-      margin: 18px auto;   
-      background-color: #008cba;
+      width: 380px;
+      margin: 18px auto;
+      background: linear-gradient(90deg, #00b4d8, #0096c7);
       color: white;
       border: none;
-      padding: 16px 0;    
-      border-radius: 10px;
-      font-size: 18px;      
+      padding: 16px 0;
+      border-radius: 12px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: 1px;
       cursor: pointer;
+      box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
       transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: #00b4d8;
-      transform: scale(1.03);
+      transform: scale(1.04);
+      box-shadow: 0 0 18px rgba(0, 180, 216, 0.8);
+      background: linear-gradient(90deg, #0096c7, #0077b6);
     }
 
     button:active {
-      background-color: #0077b6;
+      transform: scale(0.98);
+      background: linear-gradient(90deg, #0077b6, #00b4d8);
     }
 
     @media (max-width: 800px) {
       .container {
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        bottom: 50px; 
+        left: 0;
       }
-
       .chat-bubble {
         width: 70%;
         height: auto;
         font-size: 18px;
       }
-
       .container img {
         width: 70%;
       }
-
       button {
         width: 80%;
         padding: 14px 0;
         font-size: 16px;
       }
-
       h1 {
         font-size: 2.8em;
       }
@@ -107,130 +136,83 @@
   </style>
 </head>
 
-<audio id="bgMusic0" loop>
-  <source src="AquaticAmbience.mp3" type="audio/mp3">
-</audio>
-<audio id="bgMusic1" loop>
-  <source src="ZenGarden.mp3" type="audio/mp3">
-</audio>
-<audio id="bgMusic2" loop>
-  <source src="C418.mp3" type="audio/mp3">
-</audio>
-
-<script>
-  const tracks = [
-    document.getElementById("bgMusic0"),
-    document.getElementById("bgMusic1"),
-    document.getElementById("bgMusic2")
-  ];
-
-  const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
-  const musicEnabled = savedOptions.music ?? true;
-  let currentTrackIndex = parseInt(savedOptions.track ?? 0);
-  const volume = savedOptions.volume ?? 20;
-
-  tracks.forEach(t => {
-    t.volume = volume / 100;
-    t.pause();
-  });
-
-  if (musicEnabled) {
-    tracks[currentTrackIndex].play().catch(() => {
-      const playOnInteraction = () => {
-        tracks[currentTrackIndex].play();
-        window.removeEventListener('click', playOnInteraction);
-        window.removeEventListener('keydown', playOnInteraction);
-      };
-      window.addEventListener('click', playOnInteraction);
-      window.addEventListener('keydown', playOnInteraction);
-    });
-  }
-
-</script>
-
 <body>
 
   <h1>FishFarmer.AI</h1>
 
   <div class="container">
-    <div class="chat-bubble" id="fish-speech">
-      glub glub glub
-    </div>
-
-    <img 
-      src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" 
-      alt="fish"
-    >
+    <div class="chat-bubble" id="fish-speech">glub glub glub</div>
+    <img src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
   </div>
 
-  <button type="button" onclick="window.location.href='2Chat.html'">
-    Chat
-  </button>
+  <button type="button" onclick="window.location.href='2Chat.html'">Chat</button>
+  <button type="button" onclick="window.location.href='5Saves.html'">Saved Farms</button>
+  <button type="button" onclick="window.location.href='3Options.html'">Options</button>
+  <button type="button" onclick="window.location.href='4Account.html'">Account</button>
 
-  <button type="button" onclick="window.location.href='5Saves.html'">
-    Saved Farms
-  </button>
-
-  <button type="button" onclick="window.location.href='3Options.html'">
-    Options
-  </button>
-
-  <button type="button" onclick="window.location.href='4Account.html'">
-    Account
-  </button>
+  <audio id="bgMusic0" loop><source src="AquaticAmbience.mp3" type="audio/mp3"></audio>
+  <audio id="bgMusic1" loop><source src="ZenGarden.mp3" type="audio/mp3"></audio>
+  <audio id="bgMusic2" loop><source src="C418.mp3" type="audio/mp3"></audio>
 
   <script>
-const phrases = [
-  "I byte fish",
-  "Buffering...",
-  "Swim.exe",
-  "404 pond",
-  "SeaProtocol",
-  "DataPlankton",
-  "Kernel Splash",
-  "StreamOverflow",
-  "glub glub glub",
-  "System splash",
-  "Beep…blub!",
-  "404 Fish Not",
-  "I byte water",
-  "Fin-tastic!",
-  "Too many scales",
-  "Routing Wetware..",
-  "Fishy.exe",
-  "Bloop.bloop",
-  "Ctrl+Alt+Swim",
-  "Error: scales"
-];
+    const tracks = [
+      document.getElementById("bgMusic0"),
+      document.getElementById("bgMusic1"),
+      document.getElementById("bgMusic2")
+    ];
 
-const fishBubble = document.getElementById("fish-speech");
+    const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+    const musicEnabled = savedOptions.music ?? true;
+    let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+    const volume = savedOptions.volume ?? 20;
 
-let currentPhrase = "";
-let typingIndex = 0;
-let phraseIndex = 0;
+    tracks.forEach(t => { t.volume = volume / 100; t.pause(); });
 
-function typePhrase(phrase, callback) {
-  typingIndex = 0;
-  currentPhrase = "";
-  fishBubble.textContent = "";
-
-  const typer = setInterval(() => {
-    currentPhrase += phrase[typingIndex];
-    fishBubble.textContent = currentPhrase;
-    typingIndex++;
-    if (typingIndex === phrase.length) {
-      clearInterval(typer);
-      setTimeout(callback, 3000); 
+    if (musicEnabled) {
+      tracks[currentTrackIndex].play().catch(() => {
+        const playOnInteraction = () => {
+          tracks[currentTrackIndex].play();
+          window.removeEventListener('click', playOnInteraction);
+          window.removeEventListener('keydown', playOnInteraction);
+        };
+        window.addEventListener('click', playOnInteraction);
+        window.addEventListener('keydown', playOnInteraction);
+      });
     }
-  }, 100); 
-}
 
-function nextPhrase() {
-  phraseIndex = Math.floor(Math.random() * phrases.length);
-  typePhrase(phrases[phraseIndex], nextPhrase);
-}
+    const phrases = [
+      "I byte fish","Buffering...","Swim.exe","404 pond","SeaProtocol",
+      "DataPlankton","Kernel Splash","StreamOverflow","glub glub glub",
+      "System splash","Beep…blub!","404 Fish Not","I byte water",
+      "Fin-tastic!","Too many scales","Routing Wetware..","Fishy.exe",
+      "Bloop.bloop","Ctrl+Alt+Swim","Error: scales"
+    ];
 
-nextPhrase();
-</script>
+    const fishBubble = document.getElementById("fish-speech");
+    let typingIndex = 0, currentPhrase = "", phraseIndex = 0;
+
+    function typePhrase(phrase, callback) {
+      typingIndex = 0;
+      currentPhrase = "";
+      fishBubble.style.opacity = 0.9;
+      fishBubble.textContent = "";
+      const typer = setInterval(() => {
+        currentPhrase += phrase[typingIndex];
+        fishBubble.textContent = currentPhrase;
+        typingIndex++;
+        if (typingIndex === phrase.length) {
+          clearInterval(typer);
+          setTimeout(() => { fishBubble.style.opacity = 0.4; setTimeout(callback, 400); }, 2500);
+        }
+      }, 100);
+    }
+
+    function nextPhrase() {
+      phraseIndex = Math.floor(Math.random() * phrases.length);
+      typePhrase(phrases[phraseIndex], nextPhrase);
+    }
+
+    nextPhrase();
+  </script>
 </body>
 </html>
