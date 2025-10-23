@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #e8f9ff;
+      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -54,11 +54,36 @@
       font-size: 18px;
     }
 
-    select, input[type="range"] {
+    select {
       flex: 1;
       margin-left: 20px;
-      height: 28px;
+      height: 36px;
       font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #00b4d8;
+      padding: 0 12px;
+      background: linear-gradient(135deg, #d9f9ff, #b7ebff);
+      color: #004e64;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.25s ease;
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23004e64" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    }
+
+    select:hover {
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #0096c7;
+      box-shadow: 0 0 8px #0096c7;
     }
 
     .toggle-switch {
@@ -109,7 +134,7 @@
 
     .save-button {
       margin-top: 15px;
-      background-color: #008cba;
+      background: linear-gradient(90deg, #00b4d8, #0096c7);
       color: white;
       border: none;
       padding: 18px 0;
@@ -118,11 +143,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
+      box-shadow: 0 0 12px rgba(0,180,216,0.5);
     }
 
     .save-button:hover {
-      background-color: #00b4d8;
+      background: linear-gradient(90deg, #0096c7, #0077b6);
       transform: scale(1.1);
+      box-shadow: 0 0 18px rgba(0,180,216,0.8);
     }
 
     .back-button {
@@ -137,11 +164,18 @@
       font-size: 18px;
       transition: all 0.3s ease;
       align-self: flex-start;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
 
     .back-button:hover {
       background-color: #333;
       transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    }
+
+    input[type="range"] {
+      flex: 1;  /* make the slider take full width */
+      margin-left: 20px;
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -218,23 +252,21 @@
 
       <div class="option-row">
         <label for="volumeSlider">Volume</label>
-        <div style="flex:1; display:flex; align-items:center; margin-left:20px; position:relative;">
-          <input type="range" id="volumeSlider" min="0" max="100">
-          <span id="volumeTooltip" 
-                style="
-                  position:absolute;
-                  top:-30px;
-                  left:50%;
-                  transform:translateX(-50%);
-                  background-color:#008cba;
-                  color:white;
-                  padding:3px 6px;
-                  border-radius:4px;
-                  font-size:14px;
-                  display:none;
-                  white-space:nowrap;
-                ">10%</span>
-        </div>
+        <input type="range" id="volumeSlider" min="0" max="100">
+        <span id="volumeTooltip" 
+              style="
+                position:absolute;
+                top:-30px;
+                left:50%;
+                transform:translateX(-50%);
+                background-color:#008cba;
+                color:white;
+                padding:3px 6px;
+                border-radius:4px;
+                font-size:14px;
+                display:none;
+                white-space:nowrap;
+              ">10%</span>
       </div>
 
       <div class="option-row">
@@ -293,11 +325,10 @@
 
     let currentTrackIndex = 0;
 
-    // Load saved options or defaults
     const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
     musicToggle.checked = savedOptions.music ?? true;
     musicSelect.value = savedOptions.track ?? 0;
-    slider.value = savedOptions.volume ?? 10; // default to 10%
+    slider.value = savedOptions.volume ?? 10;
     tooltip.textContent = slider.value + "%";
     rationaleToggle.checked = savedOptions.includeRationale ?? true;
     geoRegion.value = savedOptions.region ?? "north-america";
@@ -308,8 +339,6 @@
     });
 
     currentTrackIndex = parseInt(musicSelect.value);
-
-    // Play current track if music enabled
     if (musicToggle.checked) tracks[currentTrackIndex].play().catch(()=>{});
 
     musicToggle.addEventListener("change", () => {
