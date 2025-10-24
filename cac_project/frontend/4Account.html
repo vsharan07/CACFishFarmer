@@ -1,280 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Account</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(to bottom, #d7faff, #b3e6f5);
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      position: relative;
-      padding-top: 40px;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<title>Account</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(to bottom, #d7faff, #b3e6f5);
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  padding-top: 40px;
+  overflow: hidden;
+}
 
-    h1 {
-      font-size: 5em;
-      margin-bottom: 30px;
-      color: #004e64;
-      text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-      animation: floatTitle 4s ease-in-out infinite;
-    }
+h1 {
+  font-size: 5em;
+  margin-bottom: 30px;
+  color: #004e64;
+  text-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  animation: floatTitle 4s ease-in-out infinite;
+}
 
-    @keyframes floatTitle {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
+@keyframes floatTitle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
 
-    .register-button {
-      padding: 18px 36px;
-      font-size: 1.8em;
-      border: none;
-      border-radius: 18px;
-      background: linear-gradient(to right, #00b4d8, #0096c7);
-      color: white;
-      cursor: pointer;
-      margin-bottom: 60px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-    }
+.button-row {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 60px;
+}
 
-    .register-button:hover {
-      background: linear-gradient(to right, #48cae4, #00b4d8);
-      transform: scale(1.08);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-    }
+.btn-account {
+  padding: 18px 48px;
+  font-size: 1.8em;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(to right, #00b4d8, #0096c7);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  min-width: 250px;
+  text-align: center;
+}
 
-    .register-button:active {
-      transform: scale(0.96);
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
+.btn-account:hover {
+  background: linear-gradient(to right, #48cae4, #00b4d8);
+  transform: scale(1.08);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
 
-    .back-button {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      width: 200px;
-      padding: 16px 0;
-      background-color: rgba(0, 0, 0, 0.65);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-    }
+.btn-account:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
 
-    .back-button:hover {
-      background-color: rgba(0, 0, 0, 0.85);
-      transform: scale(1.05);
-    }
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 200px;
+  padding: 16px 0;
+  background-color: rgba(0,0,0,0.65);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
 
-    .fish-container {
-      position: absolute;
-      right: 80px;
-      bottom: 100px; 
-      display: flex;
-      align-items: flex-end;
-      gap: 20px;
-      animation: fishFloat 8s ease-in-out infinite;
-    }
+.back-button:hover {
+  background-color: rgba(0,0,0,0.85);
+  transform: scale(1.05);
+}
 
-    @keyframes fishFloat {
-      0%   { transform: translateY(0) translateX(0) rotate(0deg); }
-      25%  { transform: translateY(-8px) translateX(-4px) rotate(-1deg); }
-      50%  { transform: translateY(-4px) translateX(-8px) rotate(1deg); }
-      75%  { transform: translateY(4px) translateX(-4px) rotate(-0.5deg); }
-      100% { transform: translateY(0) translateX(0) rotate(0deg); }
-    }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
-    .fish {
-      width: 250px;
-      height: auto;
-      position: relative;
-      bottom: -45px; 
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-      transform-origin: center;
-      animation: tailWave 2.2s ease-in-out infinite;
-    }
+.modal-content {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 16px;
+  width: 350px;
+  position: relative;
+  overflow: hidden;
+}
 
-    /* Softer tail wave */
-    @keyframes tailWave {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(-0.5deg) scale(1.01); }
-    }
+.modal-inner-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
 
-    .bubble-wrapper {
-      position: relative;
-      width: 220px;
-      height: auto;
-      animation: floatBubble 6s ease-in-out infinite;
-    }
+.modal-inner {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 700px;
+}
 
-    .bubble-wrapper img {
-      width: 100%;
-      height: auto;
-      display: block;
-      opacity: 0.85;
-      transition: opacity 1s ease;
-      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
-    }
+.modal-box {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-    .bubble-wrapper:hover img {
-      opacity: 1;
-    }
+/* Toggle Switch */
+.toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+}
 
-    @keyframes floatBubble {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
+.toggle-switch {
+  width: 140px;
+  height: 50px;
+  background: #00b4d8;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+}
 
-    .bubble-text {
-      position: absolute;
-      top: 42px; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      text-align: center;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #004e64;
-      line-height: 1.3;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
+.toggle-knob {
+  width: 64px;
+  height: 46px;
+  background: white;
+  border-radius: 50px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #00b4d8;
+}
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 3em;
-      }
-      .register-button {
-        font-size: 1.2em;
-        padding: 14px 24px;
-      }
-      .fish-container {
-        right: 10px;
-        bottom: 60px;
-      }
-    }
-  </style>
+.toggle-switch.active .toggle-knob {
+  left: 74px;
+  color: #0096c7;
+}
+
+.toggle-text-left,
+.toggle-text-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+  font-size: 0.9em;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.toggle-text-left { left: 12px; }
+.toggle-text-right { right: 12px; }
+
+.toggle-text-left.show { opacity: 1; }
+.toggle-text-right.show { opacity: 1; }
+
+.modal-box input {
+  padding: 12px 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #00b4d8;
+  outline: none;
+}
+
+.modal-box button {
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(to right, #00b4d8, #0096c7);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-box button:hover {
+  background: linear-gradient(to right, #48cae4, #00b4d8);
+  transform: scale(1.05);
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #004e64;
+}
+
+.fish-container {
+  position: absolute;
+  right: 80px;
+  bottom: 100px; 
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.fish {
+  width: 250px;
+  height: auto;
+  position: relative;
+  bottom: -45px; 
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  transform-origin: center;
+  animation: tailWave 2.2s ease-in-out infinite, fishSway 6s ease-in-out infinite;
+}
+
+@keyframes tailWave {
+  0%,100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(1deg) translateY(-1px); }
+  50% { transform: rotate(-1deg) translateY(1px); }
+  75% { transform: rotate(0.5deg) translateY(-1px); }
+}
+
+@keyframes fishSway {
+  0%,100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(2px) translateY(-2px); }
+  50% { transform: translateX(-2px) translateY(2px); }
+  75% { transform: translateX(1px) translateY(-1px); }
+}
+
+.bubble-wrapper {
+  position: absolute;
+  bottom: 50px; 
+  right: 260px;  
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: floatBubble 5s ease-in-out infinite;
+}
+
+.bubble-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.85;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+}
+
+.bubble-text {
+  position: absolute;
+  top: 41%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #004e64;
+  line-height: 1.2;
+  word-wrap: break-word;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-6px); }
+  50% { transform: translateY(-12px); }
+  75% { transform: translateY(-6px); }
+}
+
+@media (max-width:600px){
+  h1{font-size:3em;}
+  .btn-account{font-size:1.2em;padding:14px 24px;min-width:120px;}
+  .fish-container{right:10px;bottom:60px;}
+  .modal-content{width:90%;}
+  .modal-inner{width:200%;}
+  .modal-box{width:100%;}
+}
+</style>
 </head>
 <body>
 
-  <h1>Account</h1>
-  <button class="register-button">Register / Sign-up</button>
+<h1>Account</h1>
 
-  <div class="fish-container">
-    <div class="bubble-wrapper" style="bottom:50px; position:relative;">
-      <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
-      <div id="fish-speech" class="bubble-text">Placeholder text</div>
+<div class="button-row">
+  <button class="btn-account" id="registerBtn">Register / Sign-up</button>
+  <button class="btn-account" id="signInBtnOpen">Sign In</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+
+    <div class="toggle-container">
+      <div class="toggle-switch" id="switch">
+        <div class="toggle-knob">Sign Up</div>
+        <span class="toggle-text-left show" id="textLeft">Sign Up</span>
+        <span class="toggle-text-right" id="textRight">Sign In</span>
+      </div>
     </div>
-    <img class="fish" src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
+
+    <div class="modal-inner-wrapper">
+      <div class="modal-inner" id="modalInner">
+       
+        <div class="modal-box" id="signupBox">
+          <h2>Register</h2>
+          <input type="text" placeholder="Username..." id="regUsername">
+          <input type="email" placeholder="Email..." id="regEmail">
+          <input type="password" placeholder="Password..." id="regPassword">
+          <button id="createBtn">CREATE!</button>
+        </div>
+
+        <div class="modal-box" id="loginBox">
+          <h2>Sign In</h2>
+          <input type="text" placeholder="Username / Email" id="loginUsername">
+          <input type="password" placeholder="Password..." id="loginPassword">
+          <button id="loginBtn">Sign In</button>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <button class="back-button" onclick="window.history.back()">Back</button>
+<div class="fish-container">
+  <div class="bubble-wrapper">
+    <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
+    <div id="fish-speech" class="bubble-text"></div>
+  </div>
+  <img class="fish" src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
+</div>
 
-  <audio id="bgMusic0" loop>
-    <source src="AquaticAmbience.mp3" type="audio/mp3">
-  </audio>
-  <audio id="bgMusic1" loop>
-    <source src="ZenGarden.mp3" type="audio/mp3">
-  </audio>
-  <audio id="bgMusic2" loop>
-    <source src="C418.mp3" type="audio/mp3">
-  </audio>
+<button class="back-button" onclick="window.history.back()">Back</button>
 
-  <script>
-    const tracks = [
-      document.getElementById("bgMusic0"),
-      document.getElementById("bgMusic1"),
-      document.getElementById("bgMusic2")
-    ];
+<script>
+const registerBtn = document.getElementById('registerBtn');
+const signInBtnOpen = document.getElementById('signInBtnOpen');
+const modal = document.getElementById('modal');
+const closeModal = document.getElementById('closeModal');
+const toggle = document.getElementById('switch');
+const knob = toggle.querySelector('.toggle-knob');
+const textLeft = document.getElementById('textLeft');
+const textRight = document.getElementById('textRight');
+const modalInner = document.getElementById('modalInner');
 
-    const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
-    const musicEnabled = savedOptions.music ?? true;
-    let currentTrackIndex = parseInt(savedOptions.track ?? 0);
-    const volume = savedOptions.volume ?? 20;
+registerBtn.onclick = () => {
+  modal.style.display='flex';
+  toggle.classList.remove('active');
+  modalInner.style.transform='translateX(0)';
+  knob.textContent='Sign Up';
+  textLeft.classList.remove('show');
+  textRight.classList.add('show');
+};
 
-    tracks.forEach(t => {
-      t.volume = volume / 100;
-      t.pause();
-    });
+signInBtnOpen.onclick = () => {
+  modal.style.display='flex';
+  toggle.classList.add('active');
+  modalInner.style.transform='translateX(-50%)';
+  knob.textContent='Sign In';
+  textLeft.classList.add('show');
+  textRight.classList.remove('show');
+};
 
-    if (musicEnabled) {
-      tracks[currentTrackIndex].play().catch(() => {
-        const playOnInteraction = () => {
-          tracks[currentTrackIndex].play();
-          window.removeEventListener('click', playOnInteraction);
-          window.removeEventListener('keydown', playOnInteraction);
-        };
-        window.addEventListener('click', playOnInteraction);
-        window.addEventListener('keydown', playOnInteraction);
-      });
-    }
+closeModal.onclick = () => modal.style.display='none';
+window.onclick = e => { if(e.target === modal) modal.style.display='none'; };
 
-    const phrases = [
-      "I byte fish",
-      "Buffering...",
-      "Swim.exe",
-      "404 pond",
-      "SeaProtocol",
-      "DataPlankton",
-      "Kernel Splash",
-      "StreamOverflow",
-      "glub glub glub",
-      "System splash",
-      "Beep…blub!",
-      "404 Fish Not",
-      "I byte water",
-      "Fin-tastic!",
-      "Too many scales",
-      "Routing Wetware..",
-      "Fishy.exe",
-      "Bloop.bloop",
-      "Ctrl+Alt+Swim",
-      "Error: scales"
-    ];
+toggle.addEventListener('click', () => {
+  toggle.classList.toggle('active');
+  if(toggle.classList.contains('active')){
+    modalInner.style.transform='translateX(-50%)';
+    knob.textContent='Sign In';
+    textLeft.classList.add('show');
+    textRight.classList.remove('show');
+  } else {
+    modalInner.style.transform='translateX(0)';
+    knob.textContent='Sign Up';
+    textLeft.classList.remove('show');
+    textRight.classList.add('show');
+  }
+});
 
-    const fishBubble = document.getElementById("fish-speech");
+const fishBubble = document.getElementById("fish-speech");
+const phrases = ["Have an account already?", "Sign in!"];
 
-    function typePhrase(phrase, callback) {
-      let index = 0;
-      fishBubble.style.opacity = 1;
-      fishBubble.textContent = "";
-      const typer = setInterval(() => {
-        fishBubble.textContent += phrase[index];
-        index++;
-        if (index === phrase.length) {
-          clearInterval(typer);
-          setTimeout(() => {
-            fishBubble.style.opacity = 0;
-            setTimeout(callback, 600);
-          }, 2500);
-        }
-      }, 100);
-    }
+function showNextPhrase() {
+  let phrase = phrases[Math.floor(Math.random()*phrases.length)];
+  fishBubble.style.opacity = 0;
+  setTimeout(() => {
+    fishBubble.textContent = "";
+    let i = 0;
+    const typer = setInterval(() => {
+      fishBubble.textContent += phrase[i];
+      i++;
+      if(i >= phrase.length){
+        clearInterval(typer);
+        setTimeout(showNextPhrase, 2000);
+      }
+    }, 80);
+    fishBubble.style.opacity = 0.9;
+  }, 500);
+}
 
-    function nextPhrase() {
-      const phraseIndex = Math.floor(Math.random() * phrases.length);
-      typePhrase(phrases[phraseIndex], nextPhrase);
-    }
-
-    nextPhrase();
-  </script>
-
+showNextPhrase();
+</script>
 </body>
 </html>
-
