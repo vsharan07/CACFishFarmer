@@ -125,7 +125,6 @@ h1 {
   gap: 15px;
 }
 
-/* Toggle Switch */
 .toggle-container {
   display: flex;
   flex-direction: column;
@@ -234,21 +233,19 @@ h1 {
   bottom: -45px; 
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
   transform-origin: center;
-  animation: tailWave 2.2s ease-in-out infinite, fishSway 6s ease-in-out infinite;
+  animation: tailWave 2.2s ease-in-out infinite, swimFloat 5s ease-in-out infinite;
 }
 
 @keyframes tailWave {
-  0%,100% { transform: rotate(0deg) translateY(0); }
-  25% { transform: rotate(1deg) translateY(-1px); }
-  50% { transform: rotate(-1deg) translateY(1px); }
-  75% { transform: rotate(0.5deg) translateY(-1px); }
+  0%,100%{transform:rotate(0deg) scale(1);}
+  50%{transform:rotate(-0.5deg) scale(1.01);}
 }
 
-@keyframes fishSway {
-  0%,100% { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(2px) translateY(-2px); }
-  50% { transform: translateX(-2px) translateY(2px); }
-  75% { transform: translateX(1px) translateY(-1px); }
+@keyframes swimFloat {
+  0%,100%{transform:translateY(0);}
+  25%{transform:translateY(-4px);}
+  50%{transform:translateY(-7px);}
+  75%{transform:translateY(-3px);}
 }
 
 .bubble-wrapper {
@@ -259,14 +256,14 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: floatBubble 5s ease-in-out infinite;
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
 }
 
 .bubble-wrapper img {
   width: 100%;
   height: auto;
   display: block;
-  opacity: 0.85;
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
 }
 
@@ -283,14 +280,6 @@ h1 {
   line-height: 1.2;
   word-wrap: break-word;
   pointer-events: none;
-  opacity: 0.9;
-}
-
-@keyframes floatBubble {
-  0%, 100% { transform: translateY(0); }
-  25% { transform: translateY(-6px); }
-  50% { transform: translateY(-12px); }
-  75% { transform: translateY(-6px); }
 }
 
 @media (max-width:600px){
@@ -326,7 +315,6 @@ h1 {
 
     <div class="modal-inner-wrapper">
       <div class="modal-inner" id="modalInner">
-       
         <div class="modal-box" id="signupBox">
           <h2>Register</h2>
           <input type="text" placeholder="Username..." id="regUsername">
@@ -347,7 +335,7 @@ h1 {
 </div>
 
 <div class="fish-container">
-  <div class="bubble-wrapper">
+  <div class="bubble-wrapper" id="bubbleWrapper">
     <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
     <div id="fish-speech" class="bubble-text"></div>
   </div>
@@ -355,6 +343,10 @@ h1 {
 </div>
 
 <button class="back-button" onclick="window.history.back()">Back</button>
+
+<audio id="bgMusic0" loop><source src="AquaticAmbience.mp3" type="audio/mp3"></audio>
+<audio id="bgMusic1" loop><source src="ZenGarden.mp3" type="audio/mp3"></audio>
+<audio id="bgMusic2" loop><source src="C418.mp3" type="audio/mp3"></audio>
 
 <script>
 const registerBtn = document.getElementById('registerBtn');
@@ -403,28 +395,60 @@ toggle.addEventListener('click', () => {
   }
 });
 
+const bubbleWrapper = document.getElementById("bubbleWrapper");
 const fishBubble = document.getElementById("fish-speech");
-const phrases = ["Have an account already?", "Sign in!"];
+const phrases = ["Have an account already?", "Sign in!", "glub glub glub", "Swim.exe"];
+let phraseIndex = 0;
 
-function showNextPhrase() {
-  let phrase = phrases[Math.floor(Math.random()*phrases.length)];
-  fishBubble.style.opacity = 0;
-  setTimeout(() => {
-    fishBubble.textContent = "";
-    let i = 0;
-    const typer = setInterval(() => {
-      fishBubble.textContent += phrase[i];
-      i++;
-      if(i >= phrase.length){
-        clearInterval(typer);
-        setTimeout(showNextPhrase, 2000);
-      }
-    }, 80);
-    fishBubble.style.opacity = 0.9;
-  }, 500);
+function typePhrase(phrase, callback){
+  fishBubble.textContent = "";
+  let typingIndex = 0;
+  const typer = setInterval(()=>{
+    fishBubble.textContent += phrase[typingIndex];
+    typingIndex++;
+    if(typingIndex===phrase.length){
+      clearInterval(typer);
+      setTimeout(()=>{
+        bubbleWrapper.style.opacity = 0.25; 
+        setTimeout(callback, 500);
+      }, 2000);
+    }
+  },80);
+  bubbleWrapper.style.opacity = 1; 
 }
 
-showNextPhrase();
+function nextPhrase(){
+  phraseIndex = Math.floor(Math.random()*phrases.length);
+  typePhrase(phrases[phraseIndex], nextPhrase);
+}
+
+nextPhrase();
+
+
+const tracks = [
+  document.getElementById("bgMusic0"),
+  document.getElementById("bgMusic1"),
+  document.getElementById("bgMusic2")
+];
+
+const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+const musicEnabled = savedOptions.music ?? true;
+let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+const volume = savedOptions.volume ?? 20;
+
+tracks.forEach(t => { t.volume = volume / 100; t.pause(); });
+
+if(musicEnabled){
+  tracks[currentTrackIndex].play().catch(()=>{
+    const playOnInteraction = ()=>{
+      tracks[currentTrackIndex].play();
+      window.removeEventListener('click',playOnInteraction);
+      window.removeEventListener('keydown',playOnInteraction);
+    };
+    window.addEventListener('click',playOnInteraction);
+    window.addEventListener('keydown',playOnInteraction);
+  });
+}
 </script>
 </body>
 </html>
