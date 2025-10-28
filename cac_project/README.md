@@ -30,6 +30,3 @@ Alicia Ramirez  \
 Vedant Sharan  \ 
 Ava Sinclait  \ 
 
-
-## Future Directions
-1. 
