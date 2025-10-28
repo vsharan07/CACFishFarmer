@@ -180,6 +180,7 @@
       }
     }
 
+    /* Import modal styles */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -392,6 +393,7 @@
         if(value === undefined || value === null || value === 'N/A') el.value = '';
         else el.value = value;
       };
+      // saved format from 5Saves uses keys like: algae, ph, do, salinity, bacteria
       setVal('algae', (f.algae !== undefined && f.algae !== 'N/A' && !isNaN(parseFloat(f.algae))) ? parseFloat(f.algae) : (f.algae === 'N/A' ? '' : f.algae));
       setVal('phValue', (f.ph !== undefined && f.ph !== 'N/A' && !isNaN(parseFloat(f.ph))) ? parseFloat(f.ph) : (f.ph === 'N/A' ? '' : f.ph));
       setVal('oxygen', (f.do !== undefined && f.do !== 'N/A' && !isNaN(parseFloat(f.do))) ? parseFloat(f.do) : (f.do === 'N/A' ? '' : f.do));
@@ -402,10 +404,10 @@
       alert('Imported "' + (f.name || 'Farm ' + (index+1)) + '" into form.');
     }
 
+    // close import modal on overlay click
     document.getElementById('importModal').addEventListener('click', (ev) => {
       if(ev.target === document.getElementById('importModal')) closeImportModal();
     });
   </script>
 </body>
 </html>
-
