@@ -218,7 +218,7 @@
           </span>
           Algae (cells/L):
         </label>
-        <input type="number" step="0.1" id="algae" required>
+        <input type="number" step="0.1" id="algae" min ="0" required>
       </div>
 
       <div class="form-row">
@@ -238,7 +238,7 @@
           </span>
           Dissolved Oxygen (mg/L):
         </label>
-        <input type="number" step="0.1" id="oxygen" required>
+        <input type="number" step="0.1" id="oxygen" min="0" required>
       </div>
 
       <div class="form-row">
@@ -258,7 +258,7 @@
           </span>
           Bacterial Load (CFU/mL):
         </label>
-        <input type="number" step="0.1" id="bacteria" required>
+        <input type="number" step="0.1" id="bacteria" min = "0" required>
       </div>
 
       <div class="form-row" style="flex-direction: column; align-items: flex-start;">
@@ -289,13 +289,13 @@
   </div>
 
   <audio id="bgMusic0" loop>
-    <source src="AquaticAmbience.mp3" type="audio/mp3">
+    <source src="music/AquaticAmbience.mp3" type="audio/mp3">
   </audio>
   <audio id="bgMusic1" loop>
-    <source src="ZenGarden.mp3" type="audio/mp3">
+    <source src="music/ZenGarden.mp3" type="audio/mp3">
   </audio>
   <audio id="bgMusic2" loop>
-    <source src="C418.mp3" type="audio/mp3">
+    <source src="music/C418.mp3" type="audio/mp3">
   </audio>
 
   <script>
@@ -330,13 +330,13 @@
       const data = {
         algae: parseFloat(document.getElementById("algae").value),
         phValue: parseFloat(document.getElementById("phValue").value),
-        oxygen: parseFloat(document.getElementById("oxygen").value),
+        dissolvedOxygen: parseFloat(document.getElementById("oxygen").value),
         salinity: parseFloat(document.getElementById("salinity").value),
-        bacteria: parseFloat(document.getElementById("bacteria").value),
+        bacterialLoad: parseFloat(document.getElementById("bacteria").value),
         environmentalCondition: document.getElementById("environmentalCondition").value
       };
       try {
-        const res = await fetch("http://127.0.0.1:8000/callOpenAI", {
+        const res = await fetch("http://127.0.0.1:8000/geminiCall", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(data)
