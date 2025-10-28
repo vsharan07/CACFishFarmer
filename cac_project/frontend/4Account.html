@@ -14,13 +14,14 @@ body {
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  padding-top: 40px;
+  padding-top: 200px;
   overflow: hidden;
 }
 
 h1 {
   font-size: 5em;
-  margin-bottom: 30px;
+  margin-top: 50px;
+  margin-bottom: 40px;
   color: #004e64;
   text-shadow: 0 3px 10px rgba(0,0,0,0.15);
   animation: floatTitle 4s ease-in-out infinite;
@@ -220,7 +221,7 @@ h1 {
 .fish-container {
   position: absolute;
   right: 80px;
-  bottom: 100px; 
+  bottom: 230px; 
   display: flex;
   align-items: flex-end;
   gap: 20px;
@@ -397,7 +398,7 @@ toggle.addEventListener('click', () => {
 
 const bubbleWrapper = document.getElementById("bubbleWrapper");
 const fishBubble = document.getElementById("fish-speech");
-const phrases = ["Have an account already?", "Sign in!", "glub glub glub", "Swim.exe"];
+const phrases = ["Have an account already?", "Sign in!", "glub glub glub", "Welcome back, friend!", "Dive in!", "Your aquatic adventure awaits!"];
 let phraseIndex = 0;
 
 function typePhrase(phrase, callback){
