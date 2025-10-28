@@ -17,7 +17,7 @@ An AI tool for Fish Farming. Built off of the FastAPI web framework in VS Code.
 
 # Dependencies
 fastapi \
-pydantic BaseModel 
+pydantic BaseModel \
 openAI API \
 uvicorn ASGI server \
 python-dotenv \
