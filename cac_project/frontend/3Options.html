@@ -1,233 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>FishFarmer.AI - Options</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      padding: 60px 0;
-    }
+<meta charset="UTF-8">
+<title>FishFarmer.AI - Options</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 60px 0;
+    position: relative;
+  }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 25px;
-    }
+  .credits-sidebar {
+    background: rgba(255,255,255,0.75);
+    padding: 40px 30px;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 0 16px 16px 0;
+    position: fixed;
+    left: -280px; 
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.3s ease, opacity 0.3s ease;
+    z-index: 2;
+    opacity: 0.9; 
+  }
 
-    .options-container {
-      background: #ffffffcc;
-      padding: 45px 50px;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-      width: 450px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
+  .credits-sidebar.open {
+    left: 0;
+    opacity: 1; 
+  }
 
-    h1 {
-      text-align: center;
-      color: #005f73;
-      margin: 5px 0 15px 0;
-      font-size: 2.6em;
-    }
+  .credits-sidebar h1 {
+    font-size: 2em;
+    color: #005f73;
+    margin: 0;
+  }
 
-    .option-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.2em;
-      position: relative;
-    }
+  .credits-sidebar hr {
+    border: 0;
+    height: 2px;
+    background-color: #0077b6;
+    margin: 10px 0 15px 0;
+  }
 
-    label {
-      font-weight: bold;
-      color: #005f73;
-      font-size: 18px;
-    }
+  .credit-item {
+    font-size: 16px;
+    color: #004e64;
+    line-height: 1.5;
+  }
 
-    select {
-      flex: 1;
-      margin-left: 20px;
-      height: 36px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid #00b4d8;
-      padding: 0 12px;
-      background: linear-gradient(135deg, #d9f9ff, #b7ebff);
-      color: #004e64;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.25s ease;
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 18px;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="%23004e64" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    }
+  .credit-item span {
+    font-weight: bold;
+    color: #0077b6;
+    display: block; 
+    margin-bottom: 3px;
+  }
 
-    select:hover {
-      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-    }
+  .credit-item div {
+    margin-left: 10px; 
+  }
 
-    select:focus {
-      outline: none;
-      border-color: #0096c7;
-      box-shadow: 0 0 8px #0096c7;
-    }
+.credits-tab {
+  position: absolute;
+  right: -36px; 
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 80px;
+  background: white;
+  border-radius: 0 12px 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 65px;
-      height: 34px;
-      margin-left: 20px;
-    }
+.credits-tab {
+  opacity: 0.8; 
+  transition: left 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
 
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+.credits-sidebar.open + .credits-tab {
+  opacity: 1; 
+}
 
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
+.credits-arrow {
+  transition: transform 0.3s ease;
+  width: 36px; 
+  height: 50px; 
+}
 
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 28px;
-      width: 28px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
+.credits-sidebar.open .credits-arrow {
+  transform: rotate(180deg);
+}
 
-    input:checked + .slider {
-      background-color: #008cba;
-    }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 25px;
+    width: 100%;
+    max-width: 500px;
+    z-index: 1;
+  }
 
-    input:checked + .slider:before {
-      transform: translateX(31px);
-    }
+  .options-container {
+    background: #ffffffcc;
+    padding: 45px 50px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
 
-    .save-button {
-      margin-top: 15px;
-      background: linear-gradient(90deg, #00b4d8, #0096c7);
-      color: white;
-      border: none;
-      padding: 18px 0;
-      border-radius: 10px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 100%;
-      box-shadow: 0 0 12px rgba(0,180,216,0.5);
-    }
+  h1 {
+    text-align: center;
+    color: #005f73;
+    margin: 5px 0 15px 0;
+    font-size: 2.6em;
+  }
 
-    .save-button:hover {
-      background: linear-gradient(90deg, #0096c7, #0077b6);
-      transform: scale(1.1);
-      box-shadow: 0 0 18px rgba(0,180,216,0.8);
-    }
+  .option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+    position: relative;
+  }
 
-    .back-button {
-      background-color: #555;
-      color: white;
-      padding: 12px 0;  
-      width: 140px;        
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      align-self: flex-start;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-    }
+  label {
+    font-weight: bold;
+    color: #005f73;
+    font-size: 18px;
+  }
 
-    .back-button:hover {
-      background-color: #333;
-      transform: scale(1.1);
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-    }
+  select {
+    flex: 1;
+    margin-left: 20px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1px solid #00b4d8;
+    padding: 0 12px;
+    background: linear-gradient(135deg, #d9f9ff, #b7ebff);
+    color: #004e64;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23004e64" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  }
 
-    input[type="range"] {
-      flex: 1;  
-      margin-left: 20px;
-    }
+  select:hover { box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); }
+  select:focus { outline: none; border-color: #0096c7; box-shadow: 0 0 8px #0096c7; }
 
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 28px;
-      width: 28px;
-      border-radius: 50%;
-      background: white;
-      border: 2px solid #008cba;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    input[type="range"]:hover::-webkit-slider-thumb {
-      transform: scale(1.3);
-    }
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 65px;
+    height: 34px;
+    margin-left: 20px;
+  }
 
-    input[type="range"]::-moz-range-thumb {
-      height: 28px;
-      width: 28px;
-      border-radius: 50%;
-      background: white;
-      border: 2px solid #008cba;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    input[type="range"]:hover::-moz-range-thumb {
-      transform: scale(1.3);
-    }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
-    @media (max-width: 600px) {
-      .options-container {
-        width: 90%;
-        padding: 35px 25px;
-      }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
 
-      h1 {
-        font-size: 2em;
-      }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 28px;
+    width: 28px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
 
-      .back-button, .save-button {
-        width: 80%;
-        font-size: 16px;
-        padding: 14px 0;
-      }
+  input:checked + .slider { background-color: #008cba; }
+  input:checked + .slider:before { transform: translateX(31px); }
 
-      label {
-        font-size: 16px;
-      }
-    }
-  </style>
+  .save-button {
+    margin-top: 15px;
+    background: linear-gradient(90deg, #00b4d8, #0096c7);
+    color: white;
+    border: none;
+    padding: 18px 0;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 0 12px rgba(0,180,216,0.5);
+  }
+
+  .save-button:hover {
+    background: linear-gradient(90deg, #0096c7, #0077b6);
+    transform: scale(1.1);
+    box-shadow: 0 0 18px rgba(0,180,216,0.8);
+  }
+
+  .back-button {
+    background-color: #555;
+    color: white;
+    padding: 12px 0;  
+    width: 140px;        
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    margin-top: -11px;
+    margin-left: -50px;
+  }
+
+  .back-button:hover {
+    background-color: #333;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  }
+
+  input[type="range"] { flex: 1; margin-left: 20px; }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 28px; width: 28px; border-radius: 50%;
+    background: white; border: 2px solid #008cba; cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.3); }
+  input[type="range"]::-moz-range-thumb {
+    height: 28px; width: 28px; border-radius: 50%;
+    background: white; border: 2px solid #008cba; cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  input[type="range"]:hover::-moz-range-thumb { transform: scale(1.3); }
+
+  @media (max-width: 800px) {
+    .credits-sidebar { position: relative; width: 100%; border-radius: 0; box-shadow: none; left: 0; top: 0; transform: none; }
+    .credits-tab { display: none; }
+    .container { margin-left: 0; padding: 20px; }
+    h1 { font-size: 2em; }
+    .back-button, .save-button { width: 80%; font-size: 16px; padding: 14px 0; }
+    label { font-size: 16px; }
+  }
+</style>
 </head>
 <body>
+
+<div class="credits-sidebar" id="creditsSidebar">
+  <h1>Credits</h1>
+  <hr>
+  <div class="credit-item"><span>Backend Development:</span>
+    <div>Andrew Wang (Python & API Integration)</div>
+  </div>
+  <div class="credit-item"><span>Frontend / Web Development:</span>
+    <div>Alicia R. (HTML, CSS, JS)</div>
+  </div>
+  <div class="credit-item"><span>Artwork & Illustrations:</span>
+    <div>Ava Siclait (Backgrounds, Fish, & UI Elements)</div>
+  </div>
+  <div class="credit-item"><span>Project Coordination:</span>
+    <div>Vedant Sharan (AI Data Support, Import Saved Farms, GitHub, Task Management)</div>
+  </div>
+
+  <!-- Tab flush with the box -->
+  <div class="credits-tab" id="creditsTab">
+    <svg class="credits-arrow" width="100" height="24" viewBox="0 0 24 24">
+      <path fill="#0077b6" d="M9 18l6-6-6-6"/>
+    </svg>
+  </div>
+</div>
 
   <div class="container">
     <div class="options-container">
@@ -253,20 +319,9 @@
       <div class="option-row">
         <label for="volumeSlider">Volume</label>
         <input type="range" id="volumeSlider" min="0" max="100">
-        <span id="volumeTooltip" 
-              style="
-                position:absolute;
-                top:-30px;
-                left:50%;
-                transform:translateX(-50%);
-                background-color:#008cba;
-                color:white;
-                padding:3px 6px;
-                border-radius:4px;
-                font-size:14px;
-                display:none;
-                white-space:nowrap;
-              ">10%</span>
+        <span id="volumeTooltip" style="position:absolute; top:-30px; left:50%; transform:translateX(-50%);
+                   background-color:#008cba; color:white; padding:3px 6px; border-radius:4px;
+                   font-size:14px; display:none; white-space:nowrap;">10%</span>
       </div>
 
       <div class="option-row">
@@ -292,24 +347,28 @@
       <button class="save-button" type="button" onclick="saveOptions()">Save my preferences</button>
     </div>
 
-    <button class="back-button" type="button" onclick="location.href='1Home.html'">
-      Back
-    </button>
+    <button class="back-button" type="button" onclick="location.href='1Home.html'">Back</button>
   </div>
 
   <audio id="backgroundMusic" loop>
     <source src="AquaticAmbience.mp3" type="audio/mp3">
   </audio>
-
   <audio id="music1" loop>
     <source src="ZenGarden.mp3" type="audio/mp3">
   </audio>
-
   <audio id="music2" loop>
     <source src="C418.mp3" type="audio/mp3">
   </audio>
 
   <script>
+    const creditsSidebar = document.getElementById("creditsSidebar");
+    const creditsTab = document.getElementById("creditsTab");
+
+    creditsTab.addEventListener("click", () => {
+      creditsSidebar.classList.toggle("open");
+      creditsTab.classList.toggle("open");
+    });
+
     const slider = document.getElementById("volumeSlider");
     const tooltip = document.getElementById("volumeTooltip");
     const musicToggle = document.getElementById("musicToggle");
@@ -342,11 +401,8 @@
     if (musicToggle.checked) tracks[currentTrackIndex].play().catch(()=>{});
 
     musicToggle.addEventListener("change", () => {
-      if (musicToggle.checked) {
-        tracks[currentTrackIndex].play().catch(()=>{});
-      } else {
-        tracks[currentTrackIndex].pause();
-      }
+      if (musicToggle.checked) tracks[currentTrackIndex].play().catch(()=>{});
+      else tracks[currentTrackIndex].pause();
     });
 
     musicSelect.addEventListener("change", () => {
