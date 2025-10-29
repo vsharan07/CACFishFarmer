@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fish Chat</title>
+<title>Chat with the fish</title>
 <style>
   body {
     margin: 0;
@@ -123,8 +123,24 @@
     background: white;
     padding: 40px;
     border-radius: 16px;
-    width: 400px;
-    height: 300px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .chat-message {
+    margin-bottom: 12px;
+  }
+
+  .chat-message.user {
+    font-weight: bold;
+    color: #0077b6;
+  }
+
+  .chat-message.ai {
+    font-style: italic;
+    color: #004e64;
   }
 </style>
 </head>
@@ -151,27 +167,86 @@
 
 <div class="modal" id="readMoreModal">
   <div class="modal-content">
+    <p><em>Hi!</em></p>
   </div>
 </div>
 
 <script>
-function sendMessage() {
+let lastFullResponse = "";
+async function sendMessage() {
   const input = document.getElementById('userInput');
-  if(input.value.trim()==="") return;
-  input.value = "";
+  const message = input.value.trim();
+  if (message === "") return;
+  
+  const bubble = document.getElementById('chatBubbleImage');
+  const modal = document.getElementById('readMoreModal');
+  const content = modal.querySelector('.modal-content');
+
+  // appends the user's chat messages
+  const userMsg = document.createElement('p');
+  userMsg.className = "chat-message user";
+  userMsg.textContent = `You: ${message}`;
+  content.appendChild(userMsg);
+
+  // the fish is thinking
+  modal.style.display = 'flex';
+  const thinkingMsg = document.createElement('p');
+  thinkingMsg.className = "chat-message ai";
+  thinkingMsg.textContent = "I'm thinking...";
+  content.appendChild(thinkingMsg);
+  content.scrollTop = content.scrollHeight;
+
+  // requests data from backend
+  const requestData = {
+    messages: [{ role: "user", content: message }],
+    farmingData: {
+      phValue: 7.0,
+      salinity: 9.0,
+      algae: 500.0,
+      dissolvedOxygen: 5.5,
+      bacterialLoad: 2.0,
+      environmentalCondition: message
+    }
+  };
+
+ try {
+        const response = await fetch("/geminiCall", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestData)
+        });
+        const data = await response.json();
+
+        // puts a summary of the ai response
+        const summary = data.response.slice(0, 100) + (data.response.length > 100 ? "..." : "");
+        bubble.src = "https://www.freeiconspng.com/uploads/speech-bubble-png-27.png"; // or update your bubble text
+        bubble.title = summary; // hover text
+
+        // Save full response for modal
+        lastFullResponse = data.response;
+
+    } catch (err) {
+        console.error(err);
+        lastFullResponse = "Something went wrong.";
+    }
+
+    input.value = "";
 }
 
+
+// modal stuff
 const readMoreBtn = document.getElementById('readMoreBtn');
 const readMoreModal = document.getElementById('readMoreModal');
 
 readMoreBtn.onclick = () => {
   readMoreModal.style.display = 'flex';
+  modalContent.textContent = lastFullResponse;  // actually shows response
+  readMoreModal.style.display = 'flex';
 };
 
 readMoreModal.onclick = (e) => {
-  if(e.target === readMoreModal) readMoreModal.style.display = 'none';
+  if (e.target === readMoreModal) readMoreModal.style.display = 'none';
 };
 </script>
-
 </body>
 </html>
