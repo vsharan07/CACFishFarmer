@@ -21,11 +21,11 @@ pydantic BaseModel \
 Gemini API (2.5 flash) \
 uvicorn ASGI server \
 python-dotenv \
-bcrypt \
+bcrypt 
 
 ## Team + Credit
 Andrew Wang \ 
 Alicia Ramirez  \ 
 Vedant Sharan  \ 
-Ava Sinclait  \ 
+Ava Sinclait   
 
