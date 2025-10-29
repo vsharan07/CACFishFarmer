@@ -1,365 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fish Farm Analysis</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8">
+<title>Fish Farm Analysis</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 1;
+  }
 
-    form {
-      background: #ffffffcc;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      width: 350px;
-    }
+  form {
+    background: #ffffffcc;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 350px;
+  }
 
-    h1 {
-      text-align: center;
-      color: #004e64;
-      margin-bottom: 10px;
-      font-size: 2.5em;
-      text-shadow: 0 0 8px #a8e0ff;
-    }
+  h1 {
+    text-align: center;
+    color: #004e64;
+    margin-bottom: 10px;
+    font-size: 2.5em;
+    text-shadow: 0 0 8px #a8e0ff;
+  }
 
-    .form-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      position: relative;
-    }
+  .form-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; position: relative; }
 
-    label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: bold;
-      color: #004e64;
-      font-size: 15px;
-      flex: 1.3;
-    }
+  label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    color: #004e64;
+    font-size: 15px;
+    flex: 1.3;
+  }
 
-    .info-icon {
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      opacity: 0.8;
-      transition: transform 0.2s ease;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
+  .info-icon { flex-shrink: 0; width: 16px; height: 16px; cursor: pointer; opacity: 0.8; transition: transform 0.2s ease; display: inline-flex; justify-content: center; align-items: center; position: relative; }
+  .info-icon img { width: 100%; height: 100%; display: block; }
+  .info-icon:hover { transform: scale(1.15); opacity: 1; }
+  .info-icon::after {
+    content: attr(data-tooltip);
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 8px;
+    position: absolute;
+    top: 50%;
+    right: 110%;
+    transform: translateY(-50%);
+    white-space: normal;
+    font-size: 12px;
+    max-width: 400px;
+    min-width: 200px;
+    z-index: 10;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .info-icon:hover::after { visibility: visible; opacity: 1; }
 
-    .info-icon img {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+  input[type="number"], textarea { flex: 1.7; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
+  textarea { height: 70px; width: 100%; resize: none; }
 
-    .info-icon:hover {
-      transform: scale(1.15);
-      opacity: 1;
-    }
+  button.analyze-btn {
+    margin-top: 10px;
+    background: linear-gradient(90deg, #00b4d8, #0096c7);
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
+  }
+  button.analyze-btn:hover { transform: scale(1.05); box-shadow: 0 0 18px rgba(0, 180, 216, 0.8); background: linear-gradient(90deg, #0096c7, #0077b6); }
+  button.analyze-btn:active { transform: scale(0.98); background: linear-gradient(90deg, #0077b6, #00b4d8); }
 
-    .info-icon::after {
-      content: attr(data-tooltip);
-      visibility: hidden;
-      opacity: 0;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 5px;
-      padding: 5px 8px;
-      position: absolute;
-      top: 50%;
-      right: 110%;
-      transform: translateY(-50%);
-      white-space: normal;
-      font-size: 12px;
-      max-width: 400px;
-      min-width: 200px;
-      z-index: 10;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
+  .back-button { width: 140px; padding: 10px 0; border-radius: 12px; font-size: 16px; font-weight: 700; background-color: #555; color: white; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 8px rgba(0,0,0,0.2); }
+  .back-button:hover { background-color: #333; transform: scale(1.05); box-shadow: 0 0 12px rgba(0,0,0,0.3); }
 
-    .info-icon:hover::after {
-      visibility: visible;
-      opacity: 1;
-    }
+  .import-btn { width: 180px; padding: 10px 0; border-radius: 12px; font-size: 16px; font-weight: 700; background: linear-gradient(90deg, #00b4d8, #0096c7); color: white; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 12px rgba(0,180,216,0.5); }
+  .import-btn:hover { background: linear-gradient(90deg, #0096c7, #0077b6); transform: scale(1.05); box-shadow: 0 0 18px rgba(0,180,216,0.8); }
 
-    input[type="number"],
-    textarea {
-      flex: 1.7;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
+  @media (max-width: 800px) { form { width: 90%; padding: 20px; } h1 { font-size: 2em; } }
 
-    textarea {
-      height: 70px;
-      width: 100%;
-      resize: none;
-    }
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
+  .import-modal { background: #fff; width: 360px; max-width: 92%; border-radius: 12px; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+  .import-list { max-height: 220px; overflow:auto; margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+  .import-item { background:#f6fbff; padding:8px 10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; }
+  .import-item button { background: linear-gradient(90deg,#00b4d8,#0096c7); color:#fff; border:none; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; }
+  .import-empty { color:#004e64; opacity:0.6; text-align:center; padding:8px 0; }
 
-    button.analyze-btn {
-      margin-top: 10px;
-      background: linear-gradient(90deg, #00b4d8, #0096c7);
-      color: white;
-      border: none;
-      padding: 12px 0;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
-    }
-
-    button.analyze-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 18px rgba(0, 180, 216, 0.8);
-      background: linear-gradient(90deg, #0096c7, #0077b6);
-    }
-
-    button.analyze-btn:active {
-      transform: scale(0.98);
-      background: linear-gradient(90deg, #0077b6, #00b4d8);
-    }
-
-    .back-button {
-      width: 140px;
-      padding: 10px 0;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      background-color: #555;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-    }
-
-    .back-button:hover {
-      background-color: #333;
-      transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-    }
-
-    .import-btn {
-      width: 180px;
-      padding: 10px 0;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      background: linear-gradient(90deg, #00b4d8, #0096c7);
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(0,180,216,0.5);
-    }
-
-    .import-btn:hover {
-      background: linear-gradient(90deg, #0096c7, #0077b6);
-      transform: scale(1.05);
-      box-shadow: 0 0 18px rgba(0,180,216,0.8);
-    }
-
-    @media (max-width: 800px) {
-      form {
-        width: 90%;
-        padding: 20px;
-      }
-      h1 {
-        font-size: 2em;
-      }
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-    .import-modal {
-      background: #fff;
-      width: 360px;
-      max-width: 92%;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
-    .import-list { max-height: 220px; overflow:auto; margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-    .import-item { background:#f6fbff; padding:8px 10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; }
-    .import-item button { background: linear-gradient(90deg,#00b4d8,#0096c7); color:#fff; border:none; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; }
-    .import-empty { color:#004e64; opacity:0.6; text-align:center; padding:8px 0; }
-  </style>
+  .bubble-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .bubble { position: absolute; bottom: -50px; border-radius: 50%; opacity: 0.5; background: radial-gradient(circle at 30% 30%, #ffffffcc, #ffffff33); animation: floatUp linear forwards; }
+  @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.6; } 100% { transform: translateY(-110vh) scale(1.2); opacity: 0; } }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <form id="farmForm">
-      <h1>Import Farm Data</h1>
+<div class="bubble-overlay" id="bubbleOverlay"></div>
 
-      <div class="form-row">
-        <label for="algae">
-          <span class="info-icon" data-tooltip="Amount of Algae present within your tank. Units are in cells per liter.">
-            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
-          </span>
-          Algae (cells/L):
-        </label>
-        <input type="number" step="0.1" id="algae" required>
-      </div>
+<div class="container">
+  <form id="farmForm">
+    <h1>Import Farm Data</h1>
 
-      <div class="form-row">
-        <label for="phValue">
-          <span class="info-icon" data-tooltip="Current pH value of your tank's water, values range from 0 - 14.">
-            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
-          </span>
-          PH Value (0 - 14):
-        </label>
-        <input type="number" step="0.1" id="phValue" min="0" max="14" required>
-      </div>
+    <div class="form-row">
+      <label for="algae">
+        <span class="info-icon" data-tooltip="Amount of Algae present within your tank. Units are in cells per liter.">
+          <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+        </span>
+        Algae (cells/L):
+      </label>
+      <input type="number" step="0.1" id="algae" required>
+    </div>
 
-      <div class="form-row">
-        <label for="oxygen">
-          <span class="info-icon" data-tooltip="Levels of dissolved oxygen in your tank. Units: mg/L">
-            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
-          </span>
-          Dissolved Oxygen (mg/L):
-        </label>
-        <input type="number" step="0.1" id="oxygen" required>
-      </div>
+    <div class="form-row">
+      <label for="phValue">
+        <span class="info-icon" data-tooltip="Current pH value of your tank's water, values range from 0 - 14.">
+          <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+        </span>
+        PH Value (0 - 14):
+      </label>
+      <input type="number" step="0.1" id="phValue" min="0" max="14" required>
+    </div>
 
-      <div class="form-row">
-        <label for="salinity">
-          <span class="info-icon" data-tooltip="Amount of dissolved salt in your tank (ppt).">
-            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
-          </span>
-          Salinity (ppt):
-        </label>
-        <input type="number" step="0.1" id="salinity" min="0" required>
-      </div>
+    <div class="form-row">
+      <label for="oxygen">
+        <span class="info-icon" data-tooltip="Levels of dissolved oxygen in your tank. Units: mg/L">
+          <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+        </span>
+        Dissolved Oxygen (mg/L):
+      </label>
+      <input type="number" step="0.1" id="oxygen" required>
+    </div>
 
-      <div class="form-row">
-        <label for="bacteria">
-          <span class="info-icon" data-tooltip="Bacteria present in your tank's water (CFU/mL).">
-            <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
-          </span>
-          Bacterial Load (CFU/mL):
-        </label>
-        <input type="number" step="0.1" id="bacteria" required>
-      </div>
+    <div class="form-row">
+      <label for="salinity">
+        <span class="info-icon" data-tooltip="Amount of dissolved salt in your tank (ppt).">
+          <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+        </span>
+        Salinity (ppt):
+      </label>
+      <input type="number" step="0.1" id="salinity" min="0" required>
+    </div>
 
-      <div class="form-row" style="flex-direction: column; align-items: flex-start;">
-        <label for="environmentalCondition">
-          Environmental Conditions (Describe):
-        </label>
-        <textarea id="environmentalCondition" required></textarea>
-      </div>
+    <div class="form-row">
+      <label for="bacteria">
+        <span class="info-icon" data-tooltip="Bacteria present in your tank's water (CFU/mL).">
+          <img src="https://cdn-icons-png.flaticon.com/512/61/61093.png" alt="info">
+        </span>
+        Bacterial Load (CFU/mL):
+      </label>
+      <input type="number" step="0.1" id="bacteria" required>
+    </div>
 
-      <button class="analyze-btn" type="submit">Analyze</button>
-    </form>
+    <div class="form-row" style="flex-direction: column; align-items: flex-start;">
+      <label for="environmentalCondition">
+        Environmental Conditions (Describe):
+      </label>
+      <textarea id="environmentalCondition" required></textarea>
+    </div>
 
-    <div style="display:flex; gap:10px; margin-top:8px;">
-      <button class="back-button" type="button" onclick="location.href='1Home.html'">Back</button>
-      <button class="import-btn" type="button" id="openImportBtn" onclick="openImportModal()">Import Saved Farm</button>
+    <button class="analyze-btn" type="button" id="analyzeBtn">Analyze</button>
+  </form>
+
+  <div style="display:flex; gap:10px; margin-top:8px;">
+    <button class="back-button" type="button" onclick="location.href='1Home.html'">Back</button>
+    <button class="import-btn" type="button" id="openImportBtn" onclick="openImportModal()">Import Saved Farm</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importModal">
+  <div class="import-modal" role="dialog" aria-modal="true">
+    <h2 style="margin:0 0 8px 0; color:#004e64;">Select a saved farm</h2>
+    <div class="import-list" id="importList"></div>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+      <button style="background:#555;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;" onclick="closeImportModal()">Cancel</button>
     </div>
   </div>
+</div>
 
-  <div class="modal-overlay" id="importModal">
-    <div class="import-modal" role="dialog" aria-modal="true">
-      <h2 style="margin:0 0 8px 0; color:#004e64;">Select a saved farm</h2>
-      <div class="import-list" id="importList"></div>
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
-        <button style="background:#555;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;" onclick="closeImportModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
+<audio id="bgMusic0" loop><source src="AquaticAmbience.mp3" type="audio/mp3"></audio>
+<audio id="bgMusic1" loop><source src="ZenGarden.mp3" type="audio/mp3"></audio>
+<audio id="bgMusic2" loop><source src="C418.mp3" type="audio/mp3"></audio>
 
-  <script>
-    function openImportModal(){
-      const importModal = document.getElementById('importModal');
-      const listEl = document.getElementById('importList');
-      listEl.innerHTML = '';
-      const farms = JSON.parse(localStorage.getItem('farms')) || [];
-      if(farms.length === 0){
-        const empty = document.createElement('div');
-        empty.className = 'import-empty';
-        empty.textContent = 'No saved farms found.';
-        listEl.appendChild(empty);
-      } else {
-        farms.forEach((f, idx) => {
-          const item = document.createElement('div');
-          item.className = 'import-item';
-          const label = document.createElement('div');
-          label.style.display = 'flex';
-          label.style.flexDirection = 'column';
-          label.innerHTML = `<strong style="color:#004e64">${f.name||'Farm '+(idx+1)}</strong>
-                             <small style="color:#0077b6; opacity:0.8">${f.algae||'N/A'} cells/L · pH ${f.ph||'N/A'}</small>`;
-          const btn = document.createElement('button');
-          btn.textContent = 'Import';
-          btn.addEventListener('click', () => importSavedFarm(idx));
-          item.appendChild(label);
-          item.appendChild(btn);
-          listEl.appendChild(item);
-        });
-      }
-      importModal.style.display = 'flex';
-    }
-
-    function closeImportModal(){ document.getElementById('importModal').style.display = 'none'; }
-
-    function importSavedFarm(index){
-      const farms = JSON.parse(localStorage.getItem('farms')) || [];
-      const f = farms[index]; if(!f) return;
-      const setVal = (elId, value) => {
-        const el = document.getElementById(elId);
-        if(!el) return;
-        el.value = value ?? '';
+<script>
+  const tracks = [
+    document.getElementById("bgMusic0"),
+    document.getElementById("bgMusic1"),
+    document.getElementById("bgMusic2")
+  ];
+  const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+  const musicEnabled = savedOptions.music ?? true;
+  let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+  const volume = savedOptions.volume ?? 20;
+  tracks.forEach(t => { t.volume = volume / 100; t.pause(); });
+  if (musicEnabled) {
+    tracks[currentTrackIndex].play().catch(() => {
+      const playOnInteraction = () => {
+        tracks[currentTrackIndex].play();
+        window.removeEventListener('click', playOnInteraction);
+        window.removeEventListener('keydown', playOnInteraction);
       };
-      setVal('algae', f.algae);
-      setVal('phValue', f.ph);
-      setVal('oxygen', f.do);
-      setVal('salinity', f.salinity);
-      setVal('bacteria', f.bacteria);
-      setVal('environmentalCondition', f.environmentalCondition);
-      closeImportModal();
-      alert('Imported "' + (f.name || 'Farm ' + (index+1)) + '" into form.');
-    }
-
-    document.getElementById('importModal').addEventListener('click', (ev) => {
-      if(ev.target === document.getElementById('importModal')) closeImportModal();
+      window.addEventListener('click', playOnInteraction);
+      window.addEventListener('keydown', playOnInteraction);
     });
-  </script>
+  }
+
+  function openImportModal(){
+    const importModal = document.getElementById('importModal');
+    const listEl = document.getElementById('importList');
+    listEl.innerHTML = '';
+    const farms = JSON.parse(localStorage.getItem('farms')) || [];
+    if(farms.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'import-empty';
+      empty.textContent = 'No saved farms found.';
+      listEl.appendChild(empty);
+    } else {
+      farms.forEach((f, idx) => {
+        const item = document.createElement('div');
+        item.className = 'import-item';
+        const label = document.createElement('div');
+        label.style.display = 'flex';
+        label.style.flexDirection = 'column';
+        label.innerHTML = `<strong style="color:#004e64">${f.name||'Farm '+(idx+1)}</strong>
+             <small style="color:#0077b6; opacity:0.8">${f.algae||'N/A'} cells/L · pH ${f.ph||'N/A'}</small>`;
+        const btn = document.createElement('button');
+        btn.textContent = 'Import';
+        btn.addEventListener('click', () => importSavedFarm(idx));
+        item.appendChild(label);
+        item.appendChild(btn);
+        listEl.appendChild(item);
+      });
+    }
+    importModal.style.display = 'flex';
+  }
+  function closeImportModal(){ document.getElementById('importModal').style.display = 'none'; }
+  function importSavedFarm(index){
+    const farms = JSON.parse(localStorage.getItem('farms')) || [];
+    const f = farms[index]; if(!f) return;
+    const setVal = (elId, value) => { const el = document.getElementById(elId); if(!el) return; el.value = value ?? ''; };
+    setVal('algae', f.algae);
+    setVal('phValue', f.ph);
+    setVal('oxygen', f.do);
+    setVal('salinity', f.salinity);
+    setVal('bacteria', f.bacteria);
+    setVal('environmentalCondition', f.environmentalCondition);
+    closeImportModal();
+    alert('Imported "' + (f.name || 'Farm ' + (index+1)) + '" into form.');
+  }
+  document.getElementById('importModal').addEventListener('click', (ev) => {
+    if(ev.target === document.getElementById('importModal')) closeImportModal();
+  });
+
+  const bubbleOverlay = document.getElementById('bubbleOverlay');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+
+  function createBubble() {
+    const bubble = document.createElement('div');
+    const size = Math.random() * 25 + 15;
+    bubble.className = 'bubble';
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
+    bubble.style.left = Math.random() * window.innerWidth + 'px';
+    bubble.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    bubbleOverlay.appendChild(bubble);
+    setTimeout(() => bubble.remove(), 4000);
+  }
+
+  analyzeBtn.addEventListener('click', () => {
+    const interval = setInterval(createBubble, 50);
+    setTimeout(() => {
+      clearInterval(interval);
+      bubbleOverlay.style.transition = 'opacity 1s';
+      bubbleOverlay.style.opacity = 0;
+      setTimeout(() => { window.location.href='6response.html'; }, 1000);
+    }, 2500);
+  });
+</script>
+
 </body>
 </html>
