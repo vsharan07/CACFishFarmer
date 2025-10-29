@@ -18,11 +18,10 @@ An AI tool for Fish Farming. Built off of the FastAPI web framework in VS Code.
 # Dependencies
 fastapi \
 pydantic BaseModel \
-openAI API \
+Gemini API (2.5 flash) \
 uvicorn ASGI server \
 python-dotenv \
-idk other things   
-
+bcrypt \
 
 ## Team + Credit
 Andrew Wang \ 
