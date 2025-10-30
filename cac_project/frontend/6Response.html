@@ -21,13 +21,30 @@
     width: 900px;
   }
 
-  .chat-bubble {
+  /* Bubble + text wrapper */
+  .chat-bubble-container {
     position: absolute;
     left: 0;
     bottom: 50px;
     width: 460px;
-    height: auto;
     z-index: 10;
+  }
+
+  .chat-bubble {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .chat-bubble-text {
+    position: absolute;
+    top: 20%;
+    left: 12%;
+    width: 75%;
+    font-size: 1.2em;
+    color: #004e64;
+    pointer-events: none;
+    word-wrap: break-word;
   }
 
   .read-more {
@@ -147,10 +164,13 @@
 <body>
 
 <div class="chat-container">
-  <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png"
-       alt="chat bubble"
-       class="chat-bubble"
-       id="chatBubbleImage">
+
+  <div class="chat-bubble-container">
+    <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png"
+         alt="chat bubble"
+         class="chat-bubble">
+    <div class="chat-bubble-text" id="bubbleText">The fish is thinking...</div>
+  </div>
 
   <div class="read-more" id="readMoreBtn">Read More</div>
 
@@ -166,37 +186,63 @@
 </div>
 
 <div class="modal" id="readMoreModal">
-  <div class="modal-content">
-    <p><em>Hi!</em></p>
-  </div>
+  <div class="modal-content"></div>
 </div>
 
 <script>
 let lastFullResponse = "";
+
+window.onload = async () => {
+  const bubbleText = document.getElementById('bubbleText');
+  const farmData = JSON.parse(localStorage.getItem('currentFarm') || '{}');
+
+  if (farmData.environmentalCondition) {
+    const requestData = {
+      messages: [{ role: "user", content: farmData.environmentalCondition }],
+      farmingData: farmData
+    };
+
+    try {
+      const res = await fetch('/geminiCall', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData)
+      });
+      const data = await res.json();
+      lastFullResponse = data.response || "Fish is thinking...";
+      bubbleText.textContent = lastFullResponse.length > 100
+        ? lastFullResponse.slice(0, 100) + "..."
+        : lastFullResponse;
+    } catch (err) {
+      console.error(err);
+      bubbleText.textContent = "Something went wrong...";
+    }
+  } else {
+    bubbleText.textContent = "The fish is waiting for your message!";
+  }
+};
+
 async function sendMessage() {
   const input = document.getElementById('userInput');
   const message = input.value.trim();
-  if (message === "") return;
-  
-  const bubble = document.getElementById('chatBubbleImage');
-  const modal = document.getElementById('readMoreModal');
-  const content = modal.querySelector('.modal-content');
+  if (!message) return;
 
-  // appends the user's chat messages
+  const bubbleText = document.getElementById('bubbleText');
+  const modal = document.getElementById('readMoreModal');
+  const modalContent = modal.querySelector('.modal-content');
+
   const userMsg = document.createElement('p');
   userMsg.className = "chat-message user";
   userMsg.textContent = `You: ${message}`;
-  content.appendChild(userMsg);
+  modalContent.appendChild(userMsg);
 
-  // the fish is thinking
-  modal.style.display = 'flex';
   const thinkingMsg = document.createElement('p');
   thinkingMsg.className = "chat-message ai";
-  thinkingMsg.textContent = "I'm thinking...";
-  content.appendChild(thinkingMsg);
-  content.scrollTop = content.scrollHeight;
+  thinkingMsg.textContent = "Fish is thinking...";
+  modalContent.appendChild(thinkingMsg);
+  modal.style.display = 'flex';
+  modalContent.scrollTop = modalContent.scrollHeight;
 
-  // requests data from backend
   const requestData = {
     messages: [{ role: "user", content: message }],
     farmingData: {
@@ -209,38 +255,39 @@ async function sendMessage() {
     }
   };
 
- try {
-        const response = await fetch("/geminiCall", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestData)
-        });
-        const data = await response.json();
+  try {
+    const res = await fetch("/geminiCall", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestData)
+    });
+    const data = await res.json();
 
-        // puts a summary of the ai response
-        const summary = data.response.slice(0, 100) + (data.response.length > 100 ? "..." : "");
-        bubble.src = "https://www.freeiconspng.com/uploads/speech-bubble-png-27.png"; // or update your bubble text
-        bubble.title = summary; // hover text
+    lastFullResponse = data.response || "No response.";
+    const truncated = lastFullResponse.length > 100
+      ? lastFullResponse.slice(0, 100) + "..."
+      : lastFullResponse;
 
-        // Save full response for modal
-        lastFullResponse = data.response;
+    bubbleText.textContent = truncated;
+    thinkingMsg.textContent = lastFullResponse;
+    modalContent.scrollTop = modalContent.scrollHeight;
 
-    } catch (err) {
-        console.error(err);
-        lastFullResponse = "Something went wrong.";
-    }
+  } catch (err) {
+    console.error(err);
+    lastFullResponse = "Something went wrong.";
+    bubbleText.textContent = lastFullResponse;
+    thinkingMsg.textContent = lastFullResponse;
+  }
 
-    input.value = "";
+  input.value = "";
 }
 
-
-// modal stuff
 const readMoreBtn = document.getElementById('readMoreBtn');
 const readMoreModal = document.getElementById('readMoreModal');
 
 readMoreBtn.onclick = () => {
-  readMoreModal.style.display = 'flex';
-  modalContent.textContent = lastFullResponse;  // actually shows response
+  const modalContent = readMoreModal.querySelector('.modal-content');
+  modalContent.innerHTML = lastFullResponse.replace(/\n/g, '<br>');
   readMoreModal.style.display = 'flex';
 };
 
