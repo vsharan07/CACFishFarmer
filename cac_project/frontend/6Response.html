@@ -8,7 +8,7 @@
     margin: 0;
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
-     background-size: cover;
+    background-size: cover;
     height: 120vh;
     overflow: hidden;
     display: flex;
@@ -17,15 +17,10 @@
     position: relative;
   }
 
-  :root {
-    --fish-width: 520px;
-  }
-
   .chat-container {
     position: relative;
     width: 900px;
   }
-
 
   .chat-bubble-container {
     position: absolute;
@@ -66,11 +61,10 @@
 
   .fish {
     position: absolute;
-    right: 0;
-    bottom: -110px;
-    width: var(--fish-width);    max-width: 80%;
+    bottom: -290px;
+    right: -150px;
+    width: 700px;
     height: auto;
-    transform-origin: center;
     animation: swimFloat 5s ease-in-out infinite;
     filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
   }
@@ -181,8 +175,9 @@
   <div class="read-more" id="readMoreBtn">Read More</div>
 
   <img src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png"
-       alt="fish"
-       class="fish">
+     alt="fish"
+     class="fish"
+     id="fishImage">
 
   <div class="input-box">
     <input type="text" id="userInput" placeholder="...">
@@ -194,6 +189,17 @@
 <div class="modal" id="readMoreModal">
   <div class="modal-content"></div>
 </div>
+
+<!-- Audio tracks -->
+<audio id="bgMusic0" loop>
+  <source src="AquaticAmbience.mp3" type="audio/mp3">
+</audio>
+<audio id="bgMusic1" loop>
+  <source src="ZenGarden.mp3" type="audio/mp3">
+</audio>
+<audio id="bgMusic2" loop>
+  <source src="C418.mp3" type="audio/mp3">
+</audio>
 
 <script>
 let lastFullResponse = "";
@@ -244,6 +250,35 @@ window.onload = async () => {
     }
   } else {
     bubbleText.textContent = "The fish is waiting for your message!";
+  }
+
+  // Play background music
+  const tracks = [
+    document.getElementById("bgMusic0"),
+    document.getElementById("bgMusic1"),
+    document.getElementById("bgMusic2")
+  ];
+
+  const savedOptions = JSON.parse(localStorage.getItem('options')) || {};
+  const musicEnabled = savedOptions.music ?? true;
+  let currentTrackIndex = parseInt(savedOptions.track ?? 0);
+  const volume = savedOptions.volume ?? 20;
+
+  tracks.forEach(t => {
+    t.volume = volume / 100;
+    t.pause();
+  });
+
+  if (musicEnabled) {
+    tracks[currentTrackIndex].play().catch(() => {
+      const playOnInteraction = () => {
+        tracks[currentTrackIndex].play();
+        window.removeEventListener('click', playOnInteraction);
+        window.removeEventListener('keydown', playOnInteraction);
+      };
+      window.addEventListener('click', playOnInteraction);
+      window.addEventListener('keydown', playOnInteraction);
+    });
   }
 };
 
