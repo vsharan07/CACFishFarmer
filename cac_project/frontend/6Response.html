@@ -17,10 +17,15 @@
     position: relative;
   }
 
+  :root {
+    --fish-width: 520px;
+  }
+
   .chat-container {
     position: relative;
     width: 900px;
   }
+
 
   .chat-bubble-container {
     position: absolute;
@@ -63,8 +68,9 @@
     position: absolute;
     right: 0;
     bottom: -110px;
-    width: 400px;
+    width: var(--fish-width);    max-width: 80%;
     height: auto;
+    transform-origin: center;
     animation: swimFloat 5s ease-in-out infinite;
     filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
   }
@@ -175,11 +181,8 @@
   <div class="read-more" id="readMoreBtn">Read More</div>
 
   <img src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png"
-     alt="fish"
-     class="fish"
-     id="fishImage"
-     style="width:700px; bottom:-290px; right:-150px;">
-
+       alt="fish"
+       class="fish">
 
   <div class="input-box">
     <input type="text" id="userInput" placeholder="...">

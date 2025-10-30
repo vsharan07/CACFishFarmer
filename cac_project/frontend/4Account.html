@@ -18,6 +18,10 @@ body {
   overflow: hidden;
 }
 
+  :root {
+    --fish-width: 320px;
+  }
+
 h1 {
   font-size: 5em;
   margin-top: 20px;
@@ -245,10 +249,11 @@ h1 {
 }
 
 .fish {
-  width: 250px;
+  width: var(--fish-width);
+  max-width: 100%;
   height: auto;
   position: relative;
-  bottom: -45px; 
+  bottom: -120px; 
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
   transform-origin: center;
   animation: tailWave 2.2s ease-in-out infinite, swimFloat 5s ease-in-out infinite;
@@ -364,7 +369,7 @@ h1 {
     <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
     <div id="fish-speech" class="bubble-text"></div>
   </div>
-  <img class="fish" src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
+  <img class="fish" src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png" alt="fish">
 </div>
 
 <button class="back-button" onclick="window.history.back()">Back</button>
