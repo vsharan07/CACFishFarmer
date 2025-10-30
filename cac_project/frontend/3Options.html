@@ -6,7 +6,8 @@
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+     background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
+     background-size: cover;
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -67,40 +68,36 @@
     margin-left: 10px; 
   }
 
-.credits-tab {
-  position: absolute;
-  right: -36px; 
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 80px;
-  background: white;
-  border-radius: 0 12px 12px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+  .credits-tab {
+    position: absolute;
+    right: -36px; 
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 80px;
+    background: white;
+    border-radius: 0 12px 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.8; 
+  }
 
-.credits-tab {
-  opacity: 0.8; 
-  transition: left 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
-}
+  .credits-sidebar.open + .credits-tab {
+    opacity: 1; 
+  }
 
-.credits-sidebar.open + .credits-tab {
-  opacity: 1; 
-}
+  .credits-arrow {
+    transition: transform 0.3s ease;
+    width: 36px; 
+    height: 50px; 
+  }
 
-.credits-arrow {
-  transition: transform 0.3s ease;
-  width: 36px; 
-  height: 50px; 
-}
-
-.credits-sidebar.open .credits-arrow {
-  transform: rotate(180deg);
-}
+  .credits-sidebar.open .credits-arrow {
+    transform: rotate(180deg);
+  }
 
   .container {
     display: flex;
@@ -152,7 +149,7 @@
     border-radius: 12px;
     border: 1px solid #00b4d8;
     padding: 0 12px;
-    background: linear-gradient(135deg, #d9f9ff, #b7ebff);
+    background: linear-gradient(135deg, #d7faff, #b3e6f5); /* updated gradient */
     color: #004e64;
     appearance: none;
     cursor: pointer;
@@ -270,6 +267,8 @@
 </style>
 </head>
 <body>
+<!-- Rest of your HTML remains unchanged -->
+
 
 <div class="credits-sidebar" id="creditsSidebar">
   <h1>Credits</h1>
