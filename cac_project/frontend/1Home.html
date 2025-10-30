@@ -5,30 +5,30 @@
   <title>FishFarmer.AI</title>
   <style>
     body {
-      background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+      background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
-      padding: 0 0 80px 0;
+      padding: 0;
       text-align: center;
       overflow-x: hidden;
+      position: relative;
     }
 
     h1 {
       color: #004e64;
       font-size: 3.5em;
-      margin: 50px 0 40px 0;
+      margin: 50px 0 20px 0;
       text-shadow: 0 0 12px #a8e0ff;
     }
 
     .container {
       display: flex;
       align-items: flex-start;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: nowrap;
+      justify-content: flex-start; /* left-align bubble */
       position: relative;
-      bottom: 38px; 
-      left: -60px;  
+      height: 300px; /* reserve space */
+      left: 400px; /* move bubble slightly right but keep fish centered */
     }
 
     .chat-bubble {
@@ -50,25 +50,28 @@
       opacity: 0.9;
       transition: opacity 0.4s ease;
       position: relative;
-      bottom: 0;
+      z-index: 2;
       animation: bubbleFloatExact 5s ease-in-out infinite;
+      margin-right: 50px; /* push bubble left of fish */
     }
 
     .container img {
-      width: 300px;
+      width: 450px; /* bigger fish */
       height: auto;
-      display: block;
-      position: relative;
-      bottom: -45px;
+      position: absolute;
+      bottom: -25px;
+      left: 22%;
+      transform: translateX(-50%);
       animation: swimFloatExact 5s ease-in-out infinite;
       filter: drop-shadow(0 0 8px #a2e8ff);
+      z-index: 1;
     }
 
     @keyframes swimFloatExact {
-      0%, 100% { transform: translateX(0) translateY(0) rotateY(0deg); }
-      25% { transform: translateX(4px) translateY(-5px) rotateY(2deg); }
-      50% { transform: translateX(-4px) translateY(-8px) rotateY(-2deg); }
-      75% { transform: translateX(3px) translateY(-4px) rotateY(1deg); }
+      0%, 100% { transform: translateX(-50%) translateY(0) rotateY(0deg); }
+      25% { transform: translateX(calc(-50% + 4px)) translateY(-5px) rotateY(2deg); }
+      50% { transform: translateX(calc(-50% - 4px)) translateY(-8px) rotateY(-2deg); }
+      75% { transform: translateX(calc(-50% + 3px)) translateY(-4px) rotateY(1deg); }
     }
 
     @keyframes bubbleFloatExact {
@@ -81,7 +84,7 @@
     button {
       display: block;
       width: 380px;
-      margin: 18px auto;
+      margin: 0 auto 12px auto; /* reduce spacing and top margin */
       background: linear-gradient(90deg, #00b4d8, #0096c7);
       color: white;
       border: none;
@@ -93,6 +96,9 @@
       cursor: pointer;
       box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
       transition: all 0.3s ease;
+      position: relative;
+      top: -80px; /* move all buttons up */
+      z-index: 2;
     }
 
     button:hover {
@@ -110,21 +116,25 @@
       .container {
         flex-direction: column;
         align-items: center;
-        bottom: 50px; 
+        height: 250px;
         left: 0;
       }
       .chat-bubble {
         width: 70%;
         height: auto;
         font-size: 18px;
+        margin-right: 0;
+        margin-bottom: 20px;
       }
       .container img {
         width: 70%;
+        bottom: 0;
       }
       button {
         width: 80%;
         padding: 14px 0;
         font-size: 16px;
+        top: -50px;
       }
       h1 {
         font-size: 2.8em;
@@ -139,7 +149,7 @@
 
   <div class="container">
     <div class="chat-bubble" id="fish-speech">glub glub glub</div>
-    <img src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png" alt="fish">
+    <img id="fish-img" src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png" alt="fish">
   </div>
 
   <button type="button" onclick="window.location.href='2Chat.html'">Chat</button>
@@ -186,6 +196,10 @@
     ];
 
     const fishBubble = document.getElementById("fish-speech");
+    const fishImg = document.getElementById("fish-img");
+    const fishClosed = "https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png";
+    const fishOpen = "https://image2url.com/images/1761783567339-a3993da2-6651-459e-9d6c-c5da587f4134.png";
+
     let typingIndex = 0, currentPhrase = "", phraseIndex = 0;
 
     function typePhrase(phrase, callback) {
@@ -193,12 +207,15 @@
       currentPhrase = "";
       fishBubble.style.opacity = 0.9;
       fishBubble.textContent = "";
+      fishImg.src = fishOpen; // open mouth when typing
+
       const typer = setInterval(() => {
         currentPhrase += phrase[typingIndex];
         fishBubble.textContent = currentPhrase;
         typingIndex++;
         if (typingIndex === phrase.length) {
           clearInterval(typer);
+          fishImg.src = fishClosed; // close mouth after typing
           setTimeout(() => { fishBubble.style.opacity = 0.4; setTimeout(callback, 400); }, 2500);
         }
       }, 100);
@@ -213,4 +230,3 @@
   </script>
 </body>
 </html>
-
