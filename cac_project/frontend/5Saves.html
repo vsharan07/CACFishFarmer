@@ -6,7 +6,8 @@
 <style>
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+  background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
+  background-size: cover;
   margin: 0;
   padding: 30px 0;
   display: flex;
@@ -25,7 +26,7 @@ h1 {
 }
 
 .farm-card {
-  background-color: #ffffffcc;
+  background: linear-gradient(135deg, #f0faff, #d0f0ff);
   width: 420px;
   height: 160px;
   padding: 15px;
@@ -68,6 +69,8 @@ h1 {
   top: -3px;
 }
 
+.rename-btn:hover { transform: scale(1.05); }
+
 .buttons {
   display: flex;
   gap: 12px;
@@ -76,31 +79,20 @@ h1 {
   right: 15px;
 }
 
-.btn {
-  padding: 10px 16px;
-  font-size: 16px;
+.btn, .edit-btn, .add-btn, .back-button {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-weight: 700;
   border-radius: 12px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  font-weight: 700;
   box-shadow: 0 0 12px rgba(0,0,0,0.2);
-}
-
-.btn:hover, .rename-btn:hover {
-  transform: scale(1.1);
-}
-
-.btn.view {
-  background: linear-gradient(90deg, #00b4d8, #0096c7);
-  color: white;
-  box-shadow: 0 0 12px rgba(0,180,216,0.5);
-}
-
-.btn.view:hover {
-  background: linear-gradient(90deg, #0096c7, #0077b6);
-  box-shadow: 0 0 18px rgba(0,180,216,0.8);
+  padding: 10px 16px;
+  font-size: 16px;
+  height: 42px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn.trash {
@@ -110,20 +102,39 @@ h1 {
   width: 50px;
   overflow: hidden;
 }
-
 .btn.trash::before {
   content: attr(data-text);
   display: inline-block;
   transition: all 0.3s ease;
   transform: translateX(-2px);
 }
-
 .btn.trash:hover {
   width: 100px;
 }
-
 .btn.trash:hover::before {
   content: "Delete";
+}
+
+.btn.view, .add-btn, .edit-btn {
+  background: linear-gradient(90deg, #00b4d8, #0096c7);
+  color: white;
+  box-shadow: 0 0 12px rgba(0,180,216,0.5);
+}
+.btn.view:hover, .add-btn:hover, .edit-btn:hover {
+  background: linear-gradient(90deg, #0096c7, #0077b6);
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(0,180,216,0.8);
+}
+
+.back-button {
+  background-color: #555;
+  color: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+.back-button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
 }
 
 .action-buttons {
@@ -135,38 +146,7 @@ h1 {
 
 .add-btn, .back-button {
   flex: 1;
-  padding: 14px 0;
-  font-size: 18px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 700;
-}
-
-.back-button {
-  background-color: #555;
-  color: white;
-  margin-right: 15px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
-}
-
-.back-button:hover {
-  background-color: #333;
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-}
-
-.add-btn {
-  background: linear-gradient(90deg, #00b4d8, #0096c7);
-  color: white;
-  margin-left: 15px;
-  box-shadow: 0 0 12px rgba(0,180,216,0.5);
-}
-
-.add-btn:hover {
-  background: linear-gradient(90deg, #0096c7, #0077b6);
-  box-shadow: 0 0 18px rgba(0,180,216,0.8);
+  margin: 0 7px;
 }
 
 .no-farms {
@@ -281,25 +261,6 @@ h1 {
   border-radius: 4px;
   padding: 2px 4px;
   opacity: 1;
-}
-
-.edit-btn {
-  display: block;
-  margin-left: auto;
-  background: linear-gradient(90deg, #00b4d8, #0096c7);
-  color: white;
-  padding: 8px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-size: 1em;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
-}
-
-.edit-btn:hover {
-  background: linear-gradient(90deg, #0096c7, #0077b6);
-  transform: translateY(-2px);
 }
 
 .exit-btn {
@@ -486,7 +447,8 @@ document.getElementById('confirmExit').addEventListener('click',()=>{
   document.getElementById('exitModal').style.display='none';
   document.getElementById('viewModal').style.display='none';
 });
-document.getElementById('cancelExit').addEventListener('click',()=>{ document.getElementById('exitModal').style.display='none'; });
+document.getElementById('cancelExit').addEventListener('click',()=>{ document.getElementById
+('exitModal').style.display='none'; });
 
 renderFarms();
 </script>
