@@ -4,109 +4,93 @@
 
 # -- import statements -- #
 import json
-from fastapi import FastAPI 
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi import HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse 
-from fastapi import Request
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
-import google.generativeai as genai
-import bcrypt
 from typing import List, Optional
-load_dotenv() # loads files from .env
-genai.configure(api_key = os.getenv("GEMINI_API_KEY")) 
-app = FastAPI() 
+import bcrypt
+from google import genai
 
-preferencesFile = os.path.join(os.getcwd(), "preferences.json") # user preference data
-userData = os.path.join(os.getcwd(), "users.json") # user login data, users.json is empty initially; it keeps growing as more accounts are made.
+load_dotenv()  # load .env
+GENIE_KEY = os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=GENIE_KEY)  # use client, not GenerativeModel
 
-# -- preference stuff -- # 
+app = FastAPI()
+
+# --- file paths ---
+preferencesFile = os.path.join(os.getcwd(), "preferences.json")
+userData = os.path.join(os.getcwd(), "users.json")
+frontendDir = os.path.join(os.path.dirname(__file__), "frontend")
+
+# --- preferences ---
 def loadPreferences():
     if os.path.exists(preferencesFile):
         with open(preferencesFile, "r") as f:
             return json.load(f)
-    return {
-        "sfx": True,
-        "volume": 50,
-        "includeRationale": True,
-        "geographicRegion": "north-america"
-    }
+    return {"sfx": True, "volume": 50, "includeRationale": True, "geographicRegion": "north-america"}
 
 def savePreferences(prefs):
-    print("Saving preferences:", prefs)
     with open(preferencesFile, "w") as f:
         json.dump(prefs, f, indent=4)
 
-defaultPreferences = loadPreferences()
+# --- users ---
+def loadUser():
+    if os.path.exists(userData):
+        with open(userData, "r") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return []
+    return []
 
+def saveUser(users):
+    with open(userData, "w") as f:
+        json.dump(users, f, indent=4)
+
+# --- models ---
 class userNewPreferences(BaseModel):
     sfx: bool = True
     volume: int = 50
     includeRationale: bool = True
     geographicRegion: str = "north-america"
 
-# -- user account stuff -- #
-def loadUser():
-    # actually loads user data from users.json
-    if os.path.exists(userData):
-        with open(userData, "r") as f:
-            try:
-                return json.load(f)
-            except json.JSONDecodeError:
-                # File exists but is empty or invalid JSON, return empty list
-                return []
-    return []
-
-def saveUser(users):
-    # saves the current list of users to users.json
-    with open(userData, "w") as f:
-        json.dump(users, f, indent=4)
-
-# -- user auth stuff -- #
 class userCredentials(BaseModel):
-    # base model for login or registration 
     username: str
     password: str
 
 class userRegistration(userCredentials):
-    # a model but for email
     email: str
 
 class loginResponse(BaseModel):
-    # used when a login is successful
     status: str
     message: str
-    username: str       
-        
-# -- chat stuff -- #
-class farmingData(BaseModel): # Data class
-    phValue: float # ranges from 0 - 14 (can go above 14, but would be completely unrealistic)
-    salinity: float # ppt
-    algae: float # cfu/Liter
-    dissolvedOxygen: float # mg/L
-    bacterialLoad: float # CFU/mL
-    environmentalCondition: str # depends on geographic location, could also include additional environmental factors put on your tank, like aerators, filters, etc.
-    
+    username: str
+
+class FarmingData(BaseModel):
+    phValue: Optional[float] = None
+    salinity: Optional[float] = None
+    algae: Optional[float] = None
+    dissolvedOxygen: Optional[float] = None
+    bacterialLoad: Optional[float] = None
+    environmentalCondition: Optional[str] = None
+
 class chatMessage(BaseModel):
-    role: str # user or model
+    role: str
     content: str
 
 class chatRequest(BaseModel):
     messages: List[chatMessage] = []
-    farmingData: Optional["farmingData"] = None 
+    farmingData: Optional[FarmingData] = None
 
 class response(BaseModel):
-    response: str        
-    
-# frontend directory 
-frontendDir = os.path.join(os.path.dirname(__file__), "frontend")
+    response: str
 
-app.mount("/static", StaticFiles(directory=frontendDir), name="static") # app mounts to frontend static files
-app.mount("/music", StaticFiles(directory=os.path.join(frontendDir, "music")), name="music") # app also mounts to music files, wouldn't work on uvicorn servers before
+# --- static ---
+app.mount("/static", StaticFiles(directory=frontendDir), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -114,12 +98,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# -- fastapi routes, corresponds to html pages -- #
+
+# --- routes for HTML pages ---
 @app.get("/", response_class=HTMLResponse)
 async def homeScreen():
     with open(os.path.join(frontendDir, "1Home.html"), encoding="utf-8") as f:
         return HTMLResponse(f.read())
-    
 @app.get("/1Home.html", response_class=HTMLResponse)
 async def homeScreen():
     with open(os.path.join(frontendDir, "1Home.html"), encoding="utf-8") as f:
@@ -146,107 +130,89 @@ async def saveScreen():
         return HTMLResponse(f.read())
 
 @app.get("/6Response.html", response_class=HTMLResponse)
-async def saveScreen():
+async def responseScreen():
     with open(os.path.join(frontendDir, "6Response.html"), encoding="utf-8") as f:
         return HTMLResponse(f.read())
-    
 
-# -- this is where the user's inputs go -- #
+# ... repeat similar GET routes for other HTML pages ...
+
+# --- Gemini AI ---
 @app.post("/geminiCall", response_model=response)
 async def geminiCall(data: chatRequest):
     try:
-        # build the base prompt if farming data exists
-        basePrompt = ""
+        # build prompt from farmingData
+        prompt = ""
         if data.farmingData:
-            payload = data.farmingData.model_dump()
-            currentPrefs = loadPreferences()
-            includeRationale = currentPrefs.get("includeRationale")
-            promptRegion = currentPrefs.get("geographicRegion")
-
-            addRationale = (
-                "Also, analyze each of these conditions, and provide a detailed rationale."
-                if includeRationale
-                else "Analyze each of these conditions briefly, no rationale."
-            )
-
-            basePrompt = f"""
-            The following are fish pond water conditions:
-            pH: {payload['phValue']}, Dissolved oxygen: {payload['dissolvedOxygen']} mg/L,
-            Salinity: {payload['salinity']} ppt, Algae: {payload['algae']} cells/L,
-            Bacterial load: {payload['bacterialLoad']} CFU/mL, 
-            Environmental conditions: {payload['environmentalCondition']}.
-            Tailor your response for {promptRegion}. {addRationale}
+            fd = data.farmingData
+            prefs = loadPreferences()
+            addRationale = "Also, analyze each condition with rationale." if prefs.get("includeRationale", True) else "Analyze briefly, no rationale."
+            region = prefs.get("geographicRegion", "north-america")
+            prompt = f"""
+            Fish pond water conditions:
+            pH: {fd.phValue}, Dissolved oxygen: {fd.dissolvedOxygen} mg/L,
+            Salinity: {fd.salinity} ppt, Algae: {fd.algae} cells/L,
+            Bacterial load: {fd.bacterialLoad} CFU/mL,
+            Environmental conditions: {fd.environmentalCondition}.
+            Tailor your response for {region}. {addRationale}. 
+            Lastly, don't format your response. Just have normal text, and try to make sentences as short and concise as possible.
             """
 
-        # include previous conversation
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        chat_history = data.messages or []
+        # combine chat history + prompt
+        chat_texts = [f"{m.role}: {m.content}" for m in data.messages] if data.messages else []
+        if prompt:
+            chat_texts.append(f"User: {prompt}")
+        full_content = "\n".join(chat_texts) or "Hello, analyze these conditions."
 
-        # combine the base prompt with chat history
-        full_context = [{"role": m.role, "parts": [m.content]} for m in chat_history]
-        if basePrompt:
-            full_context.append({"role": "user", "parts": [basePrompt]})
+        # call Gemini API
+        response_obj = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=full_content
+        )
 
-        result = model.generate_content(full_context)
-        text = getattr(result, "text", "No response generated.")
-        return {"response": text}
+        result_text = getattr(response_obj, "text", "No response generated.")
+        return {"response": result_text}
 
     except Exception as e:
+        print("Gemini error:", e)
         return JSONResponse(content={"error": f"Gemini request failed: {e}"}, status_code=500)
 
-@app.post("/analyzeData") 
-async def analyzeData(data: farmingData):
+# --- analyze endpoint ---
+@app.post("/analyzeData")
+async def analyzeData(data: FarmingData):
     wrapped = chatRequest(messages=[], farmingData=data)
     return await geminiCall(wrapped)
 
-# -- user authentication endpoints -- # 
+# --- auth endpoints ---
 @app.post("/register")
 async def registerUser(user: userRegistration):
     users = loadUser()
-    # this part checks if username/email already exists
-    for u in users: 
+    for u in users:
         if u['username'] == user.username:
-            raise HTTPException (status_code = 400, detail = "Username already taken :(")
+            raise HTTPException(status_code=400, detail="Username already taken")
         if u['email'] == user.email:
-            raise HTTPException (status_code = 400, detail = "Email already registered :(")
-    restrictedPassword = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8') # for security ofc
-    # creates new user record
-    newUser = {
-        "username": user.username,
-        "email": user.email,
-        "password": restrictedPassword
-    }
-    users.append(newUser)
+            raise HTTPException(status_code=400, detail="Email already registered")
+    hashed = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
+    users.append({"username": user.username, "email": user.email, "password": hashed})
     saveUser(users)
-    
     return {"status": "success", "message": "Welcome to FishFarmer.AI!"}
 
-@app.post("/login", response_model = loginResponse)
+@app.post("/login", response_model=loginResponse)
 async def loginUser(credentials: userCredentials):
     users = loadUser()
-    userRecord = None
-    for u in users:
-        if u['username'] == credentials.username or u['email'] == credentials.username:
-            userRecord = u
-            break
-    if not userRecord:
-        raise HTTPException(status_code=401, detail="User not found! Check your username/email.")
-    
-    if bcrypt.checkpw(credentials.password.encode('utf-8'), userRecord['password'].encode('utf-8')):
-        return loginResponse(
-            status="success",
-            message=f"Welcome back, {credentials.username}!",
-            username=userRecord['username']
-        )
+    userRec = next((u for u in users if u['username'] == credentials.username or u['email'] == credentials.username), None)
+    if not userRec:
+        raise HTTPException(status_code=401, detail="User not found")
+    if bcrypt.checkpw(credentials.password.encode(), userRec['password'].encode()):
+        return loginResponse(status="success", message=f"Welcome back, {credentials.username}!", username=userRec['username'])
     else:
-        raise HTTPException(status_code=401, detail="Incorrect password, try again!") 
+        raise HTTPException(status_code=401, detail="Incorrect password")
 
+# --- preferences ---
 @app.get("/options")
 async def get_options():
-    return JSONResponse(content=loadPreferences())
+    return JSONResponse(loadPreferences())
 
 @app.post("/options")
 async def save_options(prefs: userNewPreferences):
-    newPrefs = prefs.model_dump()
-    savePreferences(newPrefs)
-    return {"status": "success", "message": "Preferences saved!"}
+    savePreferences(prefs.model_dump())
+    return {"status": "success", "message": "Preferences saved"}
