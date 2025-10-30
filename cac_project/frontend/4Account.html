@@ -6,7 +6,8 @@
 <style>
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(to bottom, #d7faff, #b3e6f5);
+  background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
+      background-size: cover;
   margin: 0;
   height: 100vh;
   display: flex;
@@ -17,10 +18,6 @@ body {
   padding-top: 200px;
   overflow: hidden;
 }
-
-  :root {
-    --fish-width: 320px;
-  }
 
 h1 {
   font-size: 5em;
@@ -241,19 +238,18 @@ h1 {
 
 .fish-container {
   position: absolute;
-  right: 80px;
-  bottom: 250px; 
+  right: -10px; 
+  bottom: 80px;  
   display: flex;
   align-items: flex-end;
   gap: 20px;
 }
 
 .fish {
-  width: var(--fish-width);
-  max-width: 100%;
+  width: 500px; 
   height: auto;
   position: relative;
-  bottom: -120px; 
+  bottom: -45px; 
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
   transform-origin: center;
   animation: tailWave 2.2s ease-in-out infinite, swimFloat 5s ease-in-out infinite;
@@ -273,8 +269,8 @@ h1 {
 
 .bubble-wrapper {
   position: absolute;
-  bottom: 50px; 
-  right: 260px;  
+  bottom: 200px; 
+  right: 420px;  
   width: 220px;
   display: flex;
   justify-content: center;
@@ -369,7 +365,7 @@ h1 {
     <img src="https://www.freeiconspng.com/uploads/speech-bubble-png-27.png" alt="speech bubble">
     <div id="fish-speech" class="bubble-text"></div>
   </div>
-  <img class="fish" src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png" alt="fish">
+  <img id="fishImg" class="fish" src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png" alt="fish">
 </div>
 
 <button class="back-button" onclick="window.history.back()">Back</button>
@@ -460,6 +456,37 @@ function typePhrase(phrase, callback){
     }
   },80);
   bubbleWrapper.style.opacity = 1; 
+}
+
+const fishImg = document.getElementById("fishImg");
+const closedMouth = "https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png";
+const openMouth = "https://image2url.com/images/1761783567339-a3993da2-6651-459e-9d6c-c5da587f4134.png";
+
+function typePhrase(phrase, callback){
+  fishBubble.textContent = "";
+  let typingIndex = 0;
+  
+  
+  const mouthInterval = setInterval(() => {
+    fishImg.src = fishImg.src === closedMouth ? openMouth : closedMouth;
+  }, 200);
+
+  const typer = setInterval(() => {
+    fishBubble.textContent += phrase[typingIndex];
+    typingIndex++;
+    if(typingIndex === phrase.length){
+      clearInterval(typer);
+      clearInterval(mouthInterval);
+      fishImg.src = closedMouth; 
+
+      setTimeout(() => {
+        bubbleWrapper.style.opacity = 0.25;
+        setTimeout(callback, 500);
+      }, 2000);
+    }
+  }, 80);
+
+  bubbleWrapper.style.opacity = 1;
 }
 
 function nextPhrase(){
