@@ -47,19 +47,21 @@ h1 {
   color: white;
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  min-width: 250px;
+  min-width: 250px;    
   text-align: center;
+  transition: all 0.3s ease;
+  display: inline-block;  
+  white-space: nowrap;   
 }
 
 .btn-account:hover {
   background: linear-gradient(to right, #48cae4, #00b4d8);
-  transform: scale(1.08);
+  transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(0,0,0,0.25);
 }
 
 .btn-account:active {
-  transform: scale(0.96);
+  transform: translateY(1px);
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
@@ -126,6 +128,56 @@ h1 {
   gap: 15px;
 }
 
+.modal-box h2 {
+  color: #004e64;
+  text-align: center;
+}
+
+.modal-box input {
+  padding: 12px 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #00b4d8;
+  outline: none;
+}
+
+.modal-box button {
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(to right, #00b4d8, #0096c7);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 340px;      
+  display: block;     
+  margin: 10px auto;  
+  text-align: center;
+}
+
+.modal-box button:hover {
+  background: linear-gradient(to right, #48cae4, #00b4d8);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.modal-box button:active {
+  transform: translateY(1px) scale(1);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #004e64;
+}
+
 .toggle-container {
   display: flex;
   flex-direction: column;
@@ -182,41 +234,6 @@ h1 {
 
 .toggle-text-left.show { opacity: 1; }
 .toggle-text-right.show { opacity: 1; }
-
-.modal-box input {
-  padding: 12px 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 2px solid #00b4d8;
-  outline: none;
-}
-
-.modal-box button {
-  padding: 14px 0;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(to right, #00b4d8, #0096c7);
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modal-box button:hover {
-  background: linear-gradient(to right, #48cae4, #00b4d8);
-  transform: scale(1.05);
-}
-
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #004e64;
-}
 
 .fish-container {
   position: absolute;
@@ -295,9 +312,9 @@ h1 {
 </head>
 <body>
 
-<h1>Account</h1>
+<h1 id="mainTitle">Account</h1>
 
-<div class="button-row">
+<div class="button-row" id="buttonRow">
   <button class="btn-account" id="registerBtn">Register</button>
   <button class="btn-account" id="signInBtnOpen">Sign In</button>
 </div>
@@ -330,6 +347,13 @@ h1 {
           <input type="password" placeholder="Password..." id="loginPassword">
           <button id="loginBtn">Sign In</button>
         </div>
+
+        <div class="modal-box" id="signedInBox" style="display:none; text-align:center;">
+          <h2>Welcome!</h2>
+          <p>You are now signed in.</p>
+          <button onclick="closeSignedIn()">Close</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -359,25 +383,32 @@ const knob = toggle.querySelector('.toggle-knob');
 const textLeft = document.getElementById('textLeft');
 const textRight = document.getElementById('textRight');
 const modalInner = document.getElementById('modalInner');
+const signupBox = document.getElementById('signupBox');
+const loginBox = document.getElementById('loginBox');
+const signedInBox = document.getElementById('signedInBox');
 
-registerBtn.onclick = () => {
+function showModal(box){
   modal.style.display='flex';
-  toggle.classList.remove('active');
-  modalInner.style.transform='translateX(0)';
-  knob.textContent='Sign Up';
-  textLeft.classList.remove('show');
-  textRight.classList.add('show');
-};
+  signupBox.style.display = 'flex';
+  loginBox.style.display = 'flex';
+  signedInBox.style.display = 'none';
+  if(box === 'login'){
+    toggle.classList.add('active');
+    modalInner.style.transform='translateX(-50%)';
+    knob.textContent='Sign In';
+    textLeft.classList.add('show');
+    textRight.classList.remove('show');
+  } else {
+    toggle.classList.remove('active');
+    modalInner.style.transform='translateX(0)';
+    knob.textContent='Sign Up';
+    textLeft.classList.remove('show');
+    textRight.classList.add('show');
+  }
+}
 
-signInBtnOpen.onclick = () => {
-  modal.style.display='flex';
-  toggle.classList.add('active');
-  modalInner.style.transform='translateX(-50%)';
-  knob.textContent='Sign In';
-  textLeft.classList.add('show');
-  textRight.classList.remove('show');
-};
-
+registerBtn.onclick = () => showModal('signup');
+signInBtnOpen.onclick = () => showModal('login');
 closeModal.onclick = () => modal.style.display='none';
 window.onclick = e => { if(e.target === modal) modal.style.display='none'; };
 
@@ -396,6 +427,14 @@ toggle.addEventListener('click', () => {
   }
 });
 
+function closeSignedIn(){
+  signedInBox.style.display = 'none';
+  modal.style.display='none';
+  signupBox.style.display = 'flex';
+  loginBox.style.display = 'flex';
+}
+
+// Fish Bubble
 const bubbleWrapper = document.getElementById("bubbleWrapper");
 const fishBubble = document.getElementById("fish-speech");
 const phrases = ["Have an account already?", "Sign in!", "glub glub glub", "Welcome back, friend!", "Dive in!"];
@@ -449,6 +488,7 @@ if(musicEnabled){
     window.addEventListener('keydown',playOnInteraction);
   });
 }
+
 const createBtn = document.getElementById('createBtn');
 createBtn.onclick = async () => {
   const username = document.getElementById('regUsername').value.trim();
@@ -475,8 +515,10 @@ createBtn.onclick = async () => {
 
     const data = await res.json();
     alert(data.message || "Account created successfully!");
-    modal.style.display = 'none'; // close modal
-    // clear inputs
+    
+    signupBox.style.display = 'none';
+    loginBox.style.display = 'none';
+    signedInBox.style.display = 'flex';
     document.getElementById('regUsername').value = "";
     document.getElementById('regEmail').value = "";
     document.getElementById('regPassword').value = "";
@@ -486,7 +528,6 @@ createBtn.onclick = async () => {
   }
 };
 
-// --- login stuff ---
 const loginBtn = document.getElementById('loginBtn');
 loginBtn.onclick = async () => {
   const username = document.getElementById('loginUsername').value.trim();
@@ -512,8 +553,10 @@ loginBtn.onclick = async () => {
 
     const data = await res.json();
     alert(data.message || "Logged in successfully!");
-    modal.style.display = 'none'; // close modal
-    // clear inputs
+    
+    signupBox.style.display = 'none';
+    loginBox.style.display = 'none';
+    signedInBox.style.display = 'flex';
     document.getElementById('loginUsername').value = "";
     document.getElementById('loginPassword').value = "";
   } catch (err) {
