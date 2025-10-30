@@ -7,7 +7,8 @@
   body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(180deg, #d9f9ff 0%, #b7ebff 100%);
+    background: url('https://image2url.com/images/1761782922441-d06702be-22c8-474d-b4cb-70f8cff26c8d.png') no-repeat center center fixed;
+     background-size: cover;
     height: 120vh;
     overflow: hidden;
     display: flex;
@@ -21,7 +22,6 @@
     width: 900px;
   }
 
-  /* Bubble + text wrapper */
   .chat-bubble-container {
     position: absolute;
     left: 0;
@@ -174,9 +174,12 @@
 
   <div class="read-more" id="readMoreBtn">Read More</div>
 
-  <img src="https://i.pinimg.com/originals/81/93/f3/8193f3b95de0e28cab04bb6be83c7752.png"
-       alt="fish"
-       class="fish">
+  <img src="https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png"
+     alt="fish"
+     class="fish"
+     id="fishImage"
+     style="width:700px; bottom:-290px; right:-150px;">
+
 
   <div class="input-box">
     <input type="text" id="userInput" placeholder="...">
@@ -191,6 +194,25 @@
 
 <script>
 let lastFullResponse = "";
+
+const fishImage = document.getElementById('fishImage');
+const closedMouth = "https://image2url.com/images/1761783428429-12613f14-e588-4be6-8668-5c76026d6323.png";
+const openMouth = "https://image2url.com/images/1761783567339-a3993da2-6651-459e-9d6c-c5da587f4134.png";
+
+let talkingInterval = null;
+
+function startTalking() {
+  if (talkingInterval) return;
+  talkingInterval = setInterval(() => {
+    fishImage.src = (fishImage.src === closedMouth) ? openMouth : closedMouth;
+  }, 300);
+}
+
+function stopTalking() {
+  clearInterval(talkingInterval);
+  talkingInterval = null;
+  fishImage.src = closedMouth;
+}
 
 window.onload = async () => {
   const bubbleText = document.getElementById('bubbleText');
@@ -243,6 +265,8 @@ async function sendMessage() {
   modal.style.display = 'flex';
   modalContent.scrollTop = modalContent.scrollHeight;
 
+  startTalking();
+
   const requestData = {
     messages: [{ role: "user", content: message }],
     farmingData: {
@@ -279,6 +303,7 @@ async function sendMessage() {
     thinkingMsg.textContent = lastFullResponse;
   }
 
+  stopTalking();
   input.value = "";
 }
 
