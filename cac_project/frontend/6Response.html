@@ -182,7 +182,7 @@
   <div class="input-box">
     <input type="text" id="userInput" placeholder="...">
     <button class="send-button" onclick="sendMessage()">Send</button>
-    <button class="back-button" onclick="location.href='1Home.html'">Back</button>
+    <button class="back-button" onclick="location.href='2Chat.html'">Back</button>
   </div>
 </div>
 
@@ -190,7 +190,6 @@
   <div class="modal-content"></div>
 </div>
 
-<!-- Audio tracks -->
 <audio id="bgMusic0" loop>
   <source src="AquaticAmbience.mp3" type="audio/mp3">
 </audio>
@@ -252,7 +251,6 @@ window.onload = async () => {
     bubbleText.textContent = "The fish is waiting for your message!";
   }
 
-  // Play background music
   const tracks = [
     document.getElementById("bgMusic0"),
     document.getElementById("bgMusic1"),
