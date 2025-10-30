@@ -25,10 +25,10 @@
     .container {
       display: flex;
       align-items: flex-start;
-      justify-content: flex-start; /* left-align bubble */
+      justify-content: flex-start; 
       position: relative;
-      height: 300px; /* reserve space */
-      left: 400px; /* move bubble slightly right but keep fish centered */
+      height: 300px; 
+      left: 400px; 
     }
 
     .chat-bubble {
@@ -52,11 +52,11 @@
       position: relative;
       z-index: 2;
       animation: bubbleFloatExact 5s ease-in-out infinite;
-      margin-right: 50px; /* push bubble left of fish */
+      margin-right: 50px; 
     }
 
     .container img {
-      width: 450px; /* bigger fish */
+      width: 450px;
       height: auto;
       position: absolute;
       bottom: -25px;
@@ -84,7 +84,7 @@
     button {
       display: block;
       width: 380px;
-      margin: 0 auto 12px auto; /* reduce spacing and top margin */
+      margin: 0 auto 12px auto;
       background: linear-gradient(90deg, #00b4d8, #0096c7);
       color: white;
       border: none;
@@ -97,7 +97,7 @@
       box-shadow: 0 0 12px rgba(0, 180, 216, 0.5);
       transition: all 0.3s ease;
       position: relative;
-      top: -80px; /* move all buttons up */
+      top: -80px; 
       z-index: 2;
     }
 
@@ -207,7 +207,7 @@
       currentPhrase = "";
       fishBubble.style.opacity = 0.9;
       fishBubble.textContent = "";
-      fishImg.src = fishOpen; // open mouth when typing
+      fishImg.src = fishOpen; 
 
       const typer = setInterval(() => {
         currentPhrase += phrase[typingIndex];
@@ -215,7 +215,7 @@
         typingIndex++;
         if (typingIndex === phrase.length) {
           clearInterval(typer);
-          fishImg.src = fishClosed; // close mouth after typing
+          fishImg.src = fishClosed; 
           setTimeout(() => { fishBubble.style.opacity = 0.4; setTimeout(callback, 400); }, 2500);
         }
       }, 100);
@@ -230,3 +230,4 @@
   </script>
 </body>
 </html>
+
